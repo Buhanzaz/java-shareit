@@ -34,7 +34,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> patchRequestItem(@PathVariable Long itemId,
                                                     @RequestHeader("X-Sharer-User-Id") Long userid,
-                                                    @RequestBody @Validated(UpdateValidationObject.class)ItemDto dto) {
+                                                    @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
         ItemDto itemDto = itemService.updateItem(itemId, userid, dto);
         return ResponseEntity.ok(itemDto);
     }
@@ -54,7 +54,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> getRequestItemSearch(@RequestParam(name = "text") String itemName,
-                                                        @RequestHeader("X-Sharer-User-Id") Long userid) {
+                                                              @RequestHeader("X-Sharer-User-Id") Long userid) {
         List<ItemDto> itemDto = itemService.itemSearch(itemName, userid);
         return ResponseEntity.ok(itemDto);
     }

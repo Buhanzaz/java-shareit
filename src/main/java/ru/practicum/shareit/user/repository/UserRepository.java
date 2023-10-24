@@ -10,11 +10,10 @@ public interface UserRepository {
 
     User addUser(User user);
 
-    boolean searchEmailValidUser(String email);
+    boolean isEmailInBd(String email);
 
-    boolean searchIdValidUser(Long id);
 
-    boolean searchEmailValidUserForUpdate(Long userId, String email);
+    boolean isEmailInBdForUpdate(Long userId, String email);
 
     User updateUser(User user);
 
@@ -23,5 +22,7 @@ public interface UserRepository {
     List<User> getAllUsers();
 
     void deleteUserById(Long userId);
+
+    boolean isUserInDb(Long userId);
 
 }

@@ -24,16 +24,17 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public User addUser(User user) {
         user.setId(GenerateUserId++);
         users.put(user.getId(), user);
+
         return user;
     }
 
     @Override
-    public boolean searchEmailValidUser(String email) {
+    public boolean isEmailInBd(String email) {
         return users.values().stream().anyMatch(user -> user.getEmail().equals(email));
     }
 
     @Override
-    public boolean searchEmailValidUserForUpdate(Long userId, String email) {
+    public boolean isEmailInBdForUpdate(Long userId, String email) {
         for (User user : users.values()) {
             if (user.getId() != userId) {
                 if (user.getEmail().equals(email)) {
@@ -41,11 +42,14 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
                 }
             }
         }
+
         return false;
     }
 
-    public boolean searchIdValidUser(Long id) {
-        return users.values().stream().anyMatch(user -> user.getId() == id);
+    @Override
+    public boolean isUserInDb(Long userId) {
+        Optional<User> user = Optional.ofNullable(users.get(userId));
+        return user.isPresent();
     }
 
     @Override

@@ -8,8 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.validation.CreateValidationObject;
-import ru.practicum.shareit.user.validation.UpdateValidationObject;
+import ru.practicum.shareit.validation.validationInterface.CreateValidationObject;
+import ru.practicum.shareit.validation.validationInterface.UpdateValidationObject;
 
 import java.util.List;
 
