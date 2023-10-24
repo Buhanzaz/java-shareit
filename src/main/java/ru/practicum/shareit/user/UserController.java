@@ -6,9 +6,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.validation.CreateValidationObject;
-import ru.practicum.shareit.validation.UpdateValidationObject;
+import ru.practicum.shareit.user.validation.CreateValidationObject;
+import ru.practicum.shareit.user.validation.UpdateValidationObject;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
+
     UserService userService;
 
     @PostMapping
@@ -50,4 +52,5 @@ public class UserController {
     public void deleteRequestUser(@PathVariable Long userId) {
         userService.deleteUserById(userId);
     }
+
 }

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.validation;
+package ru.practicum.shareit.user.validation;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +11,10 @@ import ru.practicum.shareit.user.repository.UserRepository;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Validation {
+
     UserRepository userRepository;
 
-    public void checkEmail(String userEmail){
+    public void checkEmail(String userEmail) {
         if (userRepository.searchEmailValidUser(userEmail)) {
             throw new ValidationException("Email занят");
         }

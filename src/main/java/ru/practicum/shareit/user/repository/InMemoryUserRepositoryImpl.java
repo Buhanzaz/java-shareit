@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,4 +74,5 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public void deleteUserById(Long userId) {
         users.remove(userId);
     }
+
 }
