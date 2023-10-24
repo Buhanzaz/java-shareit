@@ -18,11 +18,11 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     final HashMap<Long, User> users = new HashMap<>();
 
-    Long GenerateUserId = 1L;
+    Long id = 1L;
 
     @Override
     public User addUser(User user) {
-        user.setId(GenerateUserId++);
+        user.setId(id++);
         users.put(user.getId(), user);
 
         return user;

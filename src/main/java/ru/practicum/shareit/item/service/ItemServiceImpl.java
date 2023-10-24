@@ -25,12 +25,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto addItem(Long userId, ItemDto dto) {
-        Item item = itemMapper.ToModel(dto);
+        Item item = itemMapper.toModel(dto);
 
         validation.checksUserId(userId);
         item.setUserId(userId);
 
-        return itemMapper.ToDto(itemRepository.addItem(item));
+        return itemMapper.toDto(itemRepository.addItem(item));
     }
 
     @Override
@@ -39,9 +39,9 @@ public class ItemServiceImpl implements ItemService {
         validation.checksItemId(itemId);
         validation.checksItemOwnership(itemId, userid);
 
-        Item item = itemMapper.ToModel(dto);
+        Item item = itemMapper.toModel(dto);
 
-        return itemMapper.ToDto(itemRepository.updateItem(itemId, userid, item));
+        return itemMapper.toDto(itemRepository.updateItem(itemId, userid, item));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
         validation.checksUserId(userid);
         validation.checksItemId(itemId);
 
-        return itemMapper.ToDto(itemRepository.getItemById(itemId));
+        return itemMapper.toDto(itemRepository.getItemById(itemId));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> items = itemRepository.getAllItemsOwner(userid);
 
-        return items.stream().map(itemMapper::ToDto).collect(Collectors.toList());
+        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -71,6 +71,6 @@ public class ItemServiceImpl implements ItemService {
 
         List<Item> items = itemRepository.itemSearch(itemName);
 
-        return items.stream().map(itemMapper::ToDto).collect(Collectors.toList());
+        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 }

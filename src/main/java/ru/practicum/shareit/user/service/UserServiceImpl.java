@@ -25,35 +25,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto dto) {
-        User user = userMapper.ToModel(dto);
+        User user = userMapper.toModel(dto);
 
         validation.checksEmail(user.getEmail());
-        return userMapper.ToDto(userRepository.addUser(user));
+        return userMapper.toDto(userRepository.addUser(user));
     }
 
     @Override
     public UserDto updateUser(Long userId, UserDto dto) {
-        User user = userMapper.ToModel(dto);
+        User user = userMapper.toModel(dto);
 
         validation.checksUserId(userId);
         user.setId(userId);
         validation.checksEmailForUpdate(userId, user.getEmail());
 
-        return userMapper.ToDto(userRepository.updateUser(user));
+        return userMapper.toDto(userRepository.updateUser(user));
     }
 
     @Override
     public UserDto getUserById(Long userId) {
         User user = userRepository.getUserById(userId);
 
-        return userMapper.ToDto(user);
+        return userMapper.toDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<User> usersList = userRepository.getAllUsers();
 
-        return usersList.stream().map(userMapper::ToDto).collect(Collectors.toList());
+        return usersList.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

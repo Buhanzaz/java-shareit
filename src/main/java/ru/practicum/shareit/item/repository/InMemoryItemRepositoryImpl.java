@@ -18,11 +18,11 @@ public class InMemoryItemRepositoryImpl implements ItemRepository {
 
     final HashMap<Long, Item> items = new HashMap<>();
 
-    Long GenerateItemId = 1L;
+    Long id = 1L;
 
     @Override
     public Item addItem(Item item) {
-        item.setId(GenerateItemId++);
+        item.setId(id++);
         items.put(item.getId(), item);
         return item;
     }
