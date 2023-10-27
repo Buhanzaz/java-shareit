@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InMemoryItemRepositoryImpl implements ItemRepository {
-
+public class InMemoryItemItemRepositoryImpl implements ItemRepository, ValidateItemRepository {
     final HashMap<Long, Item> items = new HashMap<>();
 
     Long id = 1L;
@@ -25,20 +24,6 @@ public class InMemoryItemRepositoryImpl implements ItemRepository {
         item.setId(id++);
         items.put(item.getId(), item);
         return item;
-    }
-
-    @Override
-    public Item updateItem(Long itemId, Long userid, Item item) {
-        Item chengeItem = getItemById(itemId);
-        Optional<String> name = Optional.ofNullable(item.getName());
-        Optional<String> description = Optional.ofNullable(item.getDescription());
-        Optional<Boolean> available = Optional.ofNullable(item.getAvailable());
-
-        name.ifPresent(chengeItem::setName);
-        description.ifPresent(chengeItem::setDescription);
-        available.ifPresent(chengeItem::setAvailable);
-
-        return chengeItem;
     }
 
     @Override

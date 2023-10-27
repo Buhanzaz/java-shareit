@@ -39,9 +39,10 @@ public class ItemServiceImpl implements ItemService {
         validation.checksItemId(itemId);
         validation.checksItemOwnership(itemId, userid);
 
-        Item item = itemMapper.toModel(dto);
+        Item item = getItemByIdNotDto(itemId);
 
-        return itemMapper.toDto(itemRepository.updateItem(itemId, userid, item));
+        itemMapper.updateItem(item, dto);
+        return itemMapper.toDto(item);
     }
 
     @Override
@@ -72,5 +73,9 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.itemSearch(itemName);
 
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
+    }
+
+    private Item getItemByIdNotDto(Long itemId) {
+        return itemRepository.getItemById(itemId);
     }
 }
