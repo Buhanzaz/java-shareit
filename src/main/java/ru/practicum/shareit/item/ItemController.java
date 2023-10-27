@@ -22,9 +22,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemController {
     ItemService itemService;
-    private final String HEADER_ID_USER = "X-Sharer-User-Id";
-    private final String URI_ID_ITEM = "/{itemId}";
-    private final String URI_SEARCH = "/search";
+    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
+    private static final String URI_ID_ITEM = "/{itemId}";
+    private static final String URI_SEARCH = "/search";
 
     @PostMapping
     public ResponseEntity<ItemDto> postRequestItem(@RequestHeader(HEADER_ID_USER) Long userId,
