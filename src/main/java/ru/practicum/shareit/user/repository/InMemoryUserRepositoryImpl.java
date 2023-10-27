@@ -46,7 +46,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository, ValidationUse
         return user.isPresent();
     }
 
-
     @Override
     public User getUserById(Long userId) {
         return users.get(userId);
