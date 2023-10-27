@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -15,8 +14,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InMemoryUserRepositoryImpl implements UserRepository {
-
+public class InMemoryUserRepositoryImpl implements UserRepository, ValidationUserRepository {
     final HashMap<Long, User> users = new HashMap<>();
 
     Long id = 1L;
@@ -63,5 +61,4 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public void deleteUserById(Long userId) {
         users.remove(userId);
     }
-
 }

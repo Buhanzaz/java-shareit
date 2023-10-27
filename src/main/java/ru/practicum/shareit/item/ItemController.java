@@ -21,40 +21,42 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemController {
-
     ItemService itemService;
+    private final String HEADER_ID_USER = "X-Sharer-User-Id";
+    private final String URI_ID_ITEM = "/{itemId}";
+    private final String URI_SEARCH = "/search";
 
     @PostMapping
-    public ResponseEntity<ItemDto> postRequestItem(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<ItemDto> postRequestItem(@RequestHeader(HEADER_ID_USER) Long userId,
                                                    @RequestBody @Validated(CreateValidationObject.class) ItemDto dto) {
         ItemDto itemDto = itemService.addItem(userId, dto);
         return ResponseEntity.ok(itemDto);
     }
 
-    @PatchMapping("/{itemId}")
+    @PatchMapping(path = URI_ID_ITEM)
     public ResponseEntity<ItemDto> patchRequestItem(@PathVariable Long itemId,
-                                                    @RequestHeader("X-Sharer-User-Id") Long userid,
+                                                    @RequestHeader(HEADER_ID_USER) Long userid,
                                                     @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
         ItemDto itemDto = itemService.updateItem(itemId, userid, dto);
         return ResponseEntity.ok(itemDto);
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping(path = URI_ID_ITEM)
     public ResponseEntity<ItemDto> getRequestItem(@PathVariable Long itemId,
-                                                  @RequestHeader("X-Sharer-User-Id") Long userid) {
+                                                  @RequestHeader(HEADER_ID_USER) Long userid) {
         ItemDto itemDto = itemService.getItemById(itemId, userid);
         return ResponseEntity.ok(itemDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader("X-Sharer-User-Id") Long userid) {
+    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader(HEADER_ID_USER) Long userid) {
         List<ItemDto> dtoItems = itemService.getAllItemsOwner(userid);
         return ResponseEntity.ok(dtoItems);
     }
 
-    @GetMapping("/search")
+    @GetMapping(path = URI_SEARCH)
     public ResponseEntity<List<ItemDto>> getRequestItemSearch(@RequestParam(name = "text") String itemName,
-                                                              @RequestHeader("X-Sharer-User-Id") Long userid) {
+                                                              @RequestHeader(HEADER_ID_USER) Long userid) {
         List<ItemDto> itemDto = itemService.itemSearch(itemName, userid);
         return ResponseEntity.ok(itemDto);
     }

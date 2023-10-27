@@ -13,11 +13,9 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-
     long id;
 
     String name;
 
     String email;
-
 }

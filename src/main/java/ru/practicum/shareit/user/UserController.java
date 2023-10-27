@@ -21,8 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-
     UserService userService;
+    private final String URI_ID_USER = "/{userId}";
 
     @PostMapping
     public ResponseEntity<UserDto> postRequestUser(@RequestBody @Validated(CreateValidationObject.class) UserDto dto) {
@@ -30,13 +30,13 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PatchMapping("/{userId}")
+    @PatchMapping(path = URI_ID_USER)
     public ResponseEntity<UserDto> patchRequestUser(@PathVariable Long userId, @RequestBody @Validated(UpdateValidationObject.class) UserDto dto) {
         UserDto userDto = userService.updateUser(userId, dto);
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping(path = URI_ID_USER)
     public ResponseEntity<UserDto> getRequestUser(@PathVariable Long userId) {
         UserDto userDto = userService.getUserById(userId);
         return ResponseEntity.ok(userDto);
@@ -48,9 +48,8 @@ public class UserController {
         return ResponseEntity.ok(userDtoList);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping(path = URI_ID_USER)
     public void deleteRequestUser(@PathVariable Long userId) {
         userService.deleteUserById(userId);
     }
-
 }

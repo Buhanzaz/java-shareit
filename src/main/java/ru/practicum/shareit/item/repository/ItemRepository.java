@@ -9,12 +9,6 @@ import java.util.List;
 public interface ItemRepository {
     Item addItem(Item item);
 
-    Item updateItem(Long itemId, Long userid, Item dto);
-
-    boolean isItemInBd(Long itemId);
-
-    boolean isItemOwner(Long itemId, Long userid);
-
     Item getItemById(Long itemId);
 
     List<Item> getAllItemsOwner(Long userId);

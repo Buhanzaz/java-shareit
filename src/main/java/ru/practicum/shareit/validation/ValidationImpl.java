@@ -6,8 +6,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.item.repository.ValidateItemRepository;
+import ru.practicum.shareit.user.repository.ValidationUserRepository;
 import ru.practicum.shareit.validation.validationInterface.Validation;
 
 @Component
@@ -15,8 +15,8 @@ import ru.practicum.shareit.validation.validationInterface.Validation;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ValidationImpl implements Validation {
 
-    UserRepository userRepository;
-    ItemRepository itemRepository;
+    ValidationUserRepository userRepository;
+    ValidateItemRepository itemRepository;
 
     @Override
     public void checksEmail(String userEmail) {

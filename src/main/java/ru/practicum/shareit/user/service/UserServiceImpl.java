@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
     Validation validation;
     UserMapper userMapper;
 
-
     @Override
     public UserDto addUser(UserDto dto) {
         User user = userMapper.toModel(dto);
