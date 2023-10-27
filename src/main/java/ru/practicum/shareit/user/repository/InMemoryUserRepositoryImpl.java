@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -30,20 +31,15 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isEmailInBd(String email) {
-        return users.values().stream().anyMatch(user -> user.getEmail().equals(email));
+        return users.values().stream()
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 
     @Override
     public boolean isEmailInBdForUpdate(Long userId, String email) {
-        for (User user : users.values()) {
-            if (user.getId() != userId) {
-                if (user.getEmail().equals(email)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return users.values().stream()
+                .filter(user -> user.getId() != userId)
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 
     @Override
@@ -52,17 +48,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         return user.isPresent();
     }
 
-    @Override
-    public User updateUser(User user) {
-        User changeUser = getUserById(user.getId());
-        Optional<String> name = Optional.ofNullable(user.getName());
-        Optional<String> email = Optional.ofNullable(user.getEmail());
-
-        name.ifPresent(changeUser::setName);
-        email.ifPresent(changeUser::setEmail);
-
-        return changeUser;
-    }
 
     @Override
     public User getUserById(Long userId) {

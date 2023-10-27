@@ -28,22 +28,23 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toModel(dto);
 
         validation.checksEmail(user.getEmail());
+
         return userMapper.toDto(userRepository.addUser(user));
     }
 
     @Override
     public UserDto updateUser(Long userId, UserDto dto) {
-        User user = userMapper.toModel(dto);
+        User user = getUserByIdNotDto(userId);
 
-        validation.checksUserId(userId);
-        user.setId(userId);
-        validation.checksEmailForUpdate(userId, user.getEmail());
+        validation.checksEmailForUpdate(userId, dto.getEmail());
 
-        return userMapper.toDto(userRepository.updateUser(user));
+        return userMapper.toDto(userMapper.updateUser(user, dto));
     }
 
     @Override
     public UserDto getUserById(Long userId) {
+        validation.checksUserId(userId);
+
         User user = userRepository.getUserById(userId);
 
         return userMapper.toDto(user);
@@ -60,6 +61,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long userId) {
         validation.checksUserId(userId);
         userRepository.deleteUserById(userId);
+    }
+
+    private User getUserByIdNotDto(Long userId) {
+        validation.checksUserId(userId);
+
+        return userRepository.getUserById(userId);
     }
 
 }

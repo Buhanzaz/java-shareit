@@ -12,10 +12,7 @@ public interface UserRepository {
 
     boolean isEmailInBd(String email);
 
-
     boolean isEmailInBdForUpdate(Long userId, String email);
-
-    User updateUser(User user);
 
     User getUserById(Long userId);
 
