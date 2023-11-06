@@ -15,13 +15,15 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleForNotFound(final NotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error 404 " + exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Error 404 " + exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<?> handleForConflict(final ConflictException exception) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Error 409 " + exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Error 409 " + exception.getMessage());
     }
 
     @ExceptionHandler

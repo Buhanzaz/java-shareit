@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item.service.inMemory;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.item.repository.inMemory.ItemRepositoryInMemory;
+import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.inMenory.UserRepositoryInMemory;
 import ru.practicum.shareit.validation.validationInterface.Validation;
 
 import java.util.Collections;
@@ -17,20 +20,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ItemServiceImpl implements ItemService {
+class ItemServiceImplInMemory implements ItemService {
 
-    ItemRepository itemRepository;
+    ItemRepositoryInMemory itemRepositoryInMemory;
+    UserRepositoryInMemory userRepositoryInMemory;
     ItemMapper itemMapper;
     Validation validation;
 
     @Override
     public ItemDto addItem(Long userId, ItemDto dto) {
-        Item item = itemMapper.toModel(dto);
-
         validation.checksUserId(userId);
-        item.setUserId(userId);
+        Item item = itemMapper.toModel(dto);
+        User user = userRepositoryInMemory.getUserById(userId);
 
-        return itemMapper.toDto(itemRepository.addItem(item));
+        item.setUser(user);
+
+        return itemMapper.toDto(itemRepositoryInMemory.addItem(item));
     }
 
     @Override
@@ -50,14 +55,14 @@ public class ItemServiceImpl implements ItemService {
         validation.checksUserId(userid);
         validation.checksItemId(itemId);
 
-        return itemMapper.toDto(itemRepository.getItemById(itemId));
+        return itemMapper.toDto(itemRepositoryInMemory.getItemById(itemId));
     }
 
     @Override
     public List<ItemDto> getAllItemsOwner(Long userid) {
         validation.checksUserId(userid);
 
-        List<Item> items = itemRepository.getAllItemsOwner(userid);
+        List<Item> items = itemRepositoryInMemory.getAllItemsOwner(userid);
 
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
@@ -70,12 +75,12 @@ public class ItemServiceImpl implements ItemService {
             return Collections.emptyList();
         }
 
-        List<Item> items = itemRepository.itemSearch(itemName);
+        List<Item> items = itemRepositoryInMemory.itemSearch(itemName);
 
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 
     private Item getItemByIdNotDto(Long itemId) {
-        return itemRepository.getItemById(itemId);
+        return itemRepositoryInMemory.getItemById(itemId);
     }
 }

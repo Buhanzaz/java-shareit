@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user.service.inMemory;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.repository.inMenory.UserRepositoryInMemory;
+import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.validation.validationInterface.Validation;
 
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImpl implements UserService {
-    UserRepository userRepository;
+class UserServiceImplInMemory implements UserService {
+    UserRepositoryInMemory userRepositoryInMemory;
     Validation validation;
     UserMapper userMapper;
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
         validation.checksEmail(user.getEmail());
 
-        return userMapper.toDto(userRepository.addUser(user));
+        return userMapper.toDto(userRepositoryInMemory.addUser(user));
     }
 
     @Override
@@ -43,14 +44,14 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long userId) {
         validation.checksUserId(userId);
 
-        User user = userRepository.getUserById(userId);
+        User user = userRepositoryInMemory.getUserById(userId);
 
         return userMapper.toDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> usersList = userRepository.getAllUsers();
+        List<User> usersList = userRepositoryInMemory.getAllUsers();
 
         return usersList.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
@@ -58,13 +59,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long userId) {
         validation.checksUserId(userId);
-        userRepository.deleteUserById(userId);
+        userRepositoryInMemory.deleteUserById(userId);
     }
 
     private User getUserByIdNotDto(Long userId) {
         validation.checksUserId(userId);
 
-        return userRepository.getUserById(userId);
+        return userRepositoryInMemory.getUserById(userId);
     }
 
 }

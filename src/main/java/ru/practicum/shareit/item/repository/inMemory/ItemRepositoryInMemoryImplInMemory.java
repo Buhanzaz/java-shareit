@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.repository;
+package ru.practicum.shareit.item.repository.inMemory;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InMemoryItemItemRepositoryImpl implements ItemRepository, ValidateItemRepository {
+class ItemRepositoryInMemoryImplInMemory implements ItemRepositoryInMemory, ValidateItemRepository {
     final HashMap<Long, Item> items = new HashMap<>();
 
     Long id = 1L;
@@ -35,8 +35,8 @@ public class InMemoryItemItemRepositoryImpl implements ItemRepository, ValidateI
     @Override
     public boolean isItemOwner(Long itemId, Long userid) {
         return items.get(itemId)
-                .getUserId()
-                .equals(userid);
+                .getUser()
+                .getId() == userid;
     }
 
 
@@ -48,7 +48,7 @@ public class InMemoryItemItemRepositoryImpl implements ItemRepository, ValidateI
     @Override
     public List<Item> getAllItemsOwner(Long userId) {
         return items.values().stream()
-                .filter(item -> item.getUserId().equals(userId))
+                .filter(item -> item.getUser().getId() == userId)
                 .collect(Collectors.toList());
     }
 

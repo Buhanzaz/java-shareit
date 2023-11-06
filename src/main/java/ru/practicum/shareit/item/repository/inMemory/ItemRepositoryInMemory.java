@@ -1,10 +1,10 @@
-package ru.practicum.shareit.item.repository;
+package ru.practicum.shareit.item.repository.inMemory;
 
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
+public interface ItemRepositoryInMemory {
     Item addItem(Item item);
 
     Item getItemById(Long itemId);

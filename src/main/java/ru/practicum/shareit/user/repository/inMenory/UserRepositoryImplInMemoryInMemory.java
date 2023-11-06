@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.repository;
+package ru.practicum.shareit.user.repository.inMenory;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InMemoryUserRepositoryImpl implements UserRepository, ValidationUserRepository {
+class UserRepositoryImplInMemoryInMemory implements UserRepositoryInMemory, ValidationUserRepositoryInMemory {
     final HashMap<Long, User> users = new HashMap<>();
 
     Long id = 1L;

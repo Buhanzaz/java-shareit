@@ -12,7 +12,7 @@ public interface ItemMapper {
     ItemDto toDto(Item item);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "isRequest", ignore = true)
     @Mapping(target = "reviews", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
