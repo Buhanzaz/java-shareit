@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.validation.validationInterface.CreateValidationObject;
 
 import javax.validation.constraints.NotBlank;
@@ -26,12 +28,13 @@ public class ItemDto {
 
     @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
     @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
+    @Length(max = 1000, groups = {CreateValidationObject.class}, message = "Вы привыслили лимит в 1000 символов")
     String description; //Описание.
 
     @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
     Boolean available;//Статус доступности вещи True - доступно, False - нет.
 
-    Long ownerId; //Владелец вещи ownerId == userId.
+    User user; //Владелец вещи ownerId == userId.
 
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 
