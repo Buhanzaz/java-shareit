@@ -34,7 +34,7 @@ public class ItemDto {
     @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
     Boolean available;//Статус доступности вещи True - доступно, False - нет.
 
-    User user; //Владелец вещи ownerId == userId.
+    User user; //Владелец вещи
 
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 

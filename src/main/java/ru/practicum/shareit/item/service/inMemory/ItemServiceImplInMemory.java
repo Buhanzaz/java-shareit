@@ -44,7 +44,7 @@ class ItemServiceImplInMemory implements ItemService {
         validation.checksItemId(itemId);
         validation.checksItemOwnership(itemId, userid);
 
-        Item item = getItemByIdNotDto(itemId);
+        Item item = getItemByIdWithoutDto(itemId);
 
         itemMapper.updateItem(item, dto);
         return itemMapper.toDto(item);
@@ -75,12 +75,14 @@ class ItemServiceImplInMemory implements ItemService {
             return Collections.emptyList();
         }
 
-        List<Item> items = itemRepositoryInMemory.itemSearch(itemName);
+        List<Item> items = itemRepositoryInMemory.itemSearch(itemName).stream()
+                .filter(item -> item.getAvailable().equals(true))
+                .collect(Collectors.toList());
 
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 
-    private Item getItemByIdNotDto(Long itemId) {
+    private Item getItemByIdWithoutDto(Long itemId) {
         return itemRepositoryInMemory.getItemById(itemId);
     }
 }
