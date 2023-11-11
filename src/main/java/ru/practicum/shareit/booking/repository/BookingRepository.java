@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.model.Booking;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByItem_User_IdAndStatusIsOrderByStartDesc(Long userId, Status status);
 
-    @Query("select b from Booking as b join fetch Item as i where i.id = :itemId")
-    List<Booking> findBookingsByItem_Id(@Param("itemId") Long itemId);
+   /* @Query("select b from Booking as b join fetch Item as i where i.id = :itemId")*/
+    List<Booking> findBookingsByItem_Id(Long itemId);
 
+    List<Booking> findByItem_IdAndStatusNotIn(Long itemId, Collection<Status> status);
+
+    List<Booking> findByItem_UserId(Long userId);
 }

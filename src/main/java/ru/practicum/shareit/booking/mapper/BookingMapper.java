@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingWithoutItemDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -28,9 +29,14 @@ public abstract class BookingMapper {
 
     public abstract BookingDto toDto(Booking booking);
 
+    @Mapping(target = "bookerId", expression = "java(booking.getBooker().getId())")
+    public abstract BookingWithoutItemDto toWithoutItemDto(Booking booking);
+
     @Named(value = "fromLongToItem")
     public Item fromLongToItem(Long ItemId) {
         return itemRepository.findByIdFetchEgle(ItemId)
                 .orElseThrow(() -> new NotFoundException("Вещи с таким id не найдено"));
     }
+
+
 }
