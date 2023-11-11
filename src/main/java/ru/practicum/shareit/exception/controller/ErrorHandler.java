@@ -1,13 +1,14 @@
 package ru.practicum.shareit.exception.controller;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.ConflictException;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidateException;
+import ru.practicum.shareit.exception.*;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -32,4 +33,38 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Error 400 " + exception.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handlerForDataException(final DataTimeException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Error 400 " + exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForDataException(final BadRequestException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForDataException(final BookingException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
+
+    @Data
+    @Builder
+    public static class ErrorResponse {
+        private final String error;
+
+        public ErrorResponse(String error) {
+            this.error = error;
+        }
+
+    }
+
 }
+
+
