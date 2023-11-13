@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.service.db;
+package ru.practicum.shareit.item.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +17,10 @@ import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.db.CommentRepositoryInDB;
-import ru.practicum.shareit.item.repository.db.ItemRepositoryInDB;
-import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.db.UserRepositoryInDB;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -34,12 +33,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class ItemServiceImplInDB implements ItemService {
+class ItemServiceImpl implements ItemService {
 
-    ItemRepositoryInDB itemRepository;
-    UserRepositoryInDB userRepository;
+    ItemRepository itemRepository;
+    UserRepository userRepository;
     BookingRepository bookingRepository;
-    CommentRepositoryInDB commentRepository;
+    CommentRepository commentRepository;
 
     ItemMapper itemMapper;
     CommentMapper commentMapper;

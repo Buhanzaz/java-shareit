@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.service.db;
+package ru.practicum.shareit.user.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.db.UserRepositoryInDB;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class UserServiceImplInDB implements UserService {
+class UserServiceImpl implements UserService {
 
-    UserRepositoryInDB userRepository;
+    UserRepository userRepository;
     UserMapper userMapper;
 
     @Override

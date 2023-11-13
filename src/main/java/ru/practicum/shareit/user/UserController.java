@@ -23,7 +23,7 @@ public class UserController {
 
     UserService userService;
 
-    public UserController(@Qualifier("userServiceImplInDB") UserService userService) {
+    public UserController(@Qualifier("userServiceImpl") UserService userService) {
         this.userService = userService;
     }
 

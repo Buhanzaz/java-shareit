@@ -13,9 +13,9 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.db.ItemRepositoryInDB;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.db.UserRepositoryInDB;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-class BookingServiceImplInDB implements BookingService {
+class BookingServiceImpl implements BookingService {
 
     BookingRepository bookingRepository;
-    UserRepositoryInDB userRepository;
-    ItemRepositoryInDB itemRepository;
+    UserRepository userRepository;
+    ItemRepository itemRepository;
     BookingMapper bookingMapper;
 
 

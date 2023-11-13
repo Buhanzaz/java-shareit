@@ -27,7 +27,7 @@ public class ItemController {
     private static final String URI_SEARCH = "/search";
     private static final String URI_ADD_COMMENT = URI_ID_ITEM + "/comment";
 
-    public ItemController(@Qualifier("itemServiceImplInDB") ItemService itemService) {
+    public ItemController(@Qualifier("itemServiceImpl") ItemService itemService) {
         this.itemService = itemService;
     }
 
