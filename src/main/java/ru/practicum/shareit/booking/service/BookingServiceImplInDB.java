@@ -3,18 +3,16 @@ package ru.practicum.shareit.booking.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
-import ru.practicum.shareit.booking.enums.State;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.db.ItemRepositoryInDB;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.db.UserRepositoryInDB;
 
@@ -29,20 +27,27 @@ class BookingServiceImplInDB implements BookingService {
 
     BookingRepository bookingRepository;
     UserRepositoryInDB userRepository;
+    ItemRepositoryInDB itemRepository;
     BookingMapper bookingMapper;
-    LocalDateTime dateTimeNow = LocalDateTime.now();
+
 
     @Override
     public BookingDto addNewBooking(Long userId, ClientRequestBookingDto dto) {
         User booker = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы!"));
+        Item item = itemRepository.findByIdFetchEgle(dto.getItemId())
+                .orElseThrow(() -> new NotFoundException("Вещи с таким id не найдено"));
 
         validationTimeFromDto(dto);
 
-        Booking booking = bookingMapper.toModel(dto);
+        Booking booking = bookingMapper.clientRequestToModel(dto, booker, item, Status.WAITING);
 
         validationBooking(userId, booking);
-        booking.setStatus(Status.WAITING);
-        booking.setBooker(booker);
+
+
+
+//        booking.setItem(item);
+//        booking.setStatus(Status.WAITING);
+//        booking.setBooker(booker);
 
         return bookingMapper.toDto(bookingRepository.save(booking));
     }
@@ -50,23 +55,27 @@ class BookingServiceImplInDB implements BookingService {
     @Override
     public BookingDto ownerResponseToTheBooking(Long userId, Boolean approved, Long bookingId) {
         Booking booking;
+
         if (userRepository.existsById(userId)) {
             booking = bookingRepository
                     .findBookingByIdAndItem_User_Id(bookingId, userId)
                     .orElseThrow(() -> new NotFoundException(String.format("Бронирование с данным %d не найдено", bookingId)));
-            if (booking.getStatus().equals(Status.APPROVED))
+            if (booking.getStatus().equals(Status.APPROVED)) {
                 throw new BookingException("Вы уже подтвердили бронирование вашей вещи.");
+            }
 
             booking.setStatus(approved ? Status.APPROVED : Status.REJECTED);
         } else {
             throw new NotFoundException("Вы не зарегистрированы");
         }
+
         return bookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Override
     public BookingDto findBookingForAuthorOrOwner(Long userId, Long bookingId) {
         Booking booking;
+
         if (userRepository.existsById(userId)) {
             booking = bookingRepository
                     .findBookingForAuthorBookingOrOwnerItem(userId, bookingId)
@@ -74,12 +83,16 @@ class BookingServiceImplInDB implements BookingService {
         } else {
             throw new NotFoundException("Вы не зарегистрированы");
         }
+
         return bookingMapper.toDto(booking);
     }
 
     @Override
-    public List<BookingDto> findAllBookingsForBooker(Long userId, String state, Integer from, Integer size) {
+    public List<BookingDto> findAllBookingsForBooker(Long userId, String state) {
+        //TODO Доделать представление в виде страниц
         if (bookingRepository.existsById(userId)) {
+            LocalDateTime dateTimeNow = LocalDateTime.now();
+
             switch (state) {
                 case "ALL":
                     return bookingRepository.findByBookerIdOrderByStartDesc(userId)
@@ -119,8 +132,11 @@ class BookingServiceImplInDB implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllBookingsForOwner(Long userId, String state, Integer from, Integer size){
+    public List<BookingDto> findAllBookingsForOwner(Long userId, String state) {
+        //TODO Доделать представление в виде страниц
         if (userRepository.existsById(userId)) {
+            LocalDateTime dateTimeNow = LocalDateTime.now();
+
             switch (state) {
                 case "ALL":
                     return bookingRepository.findByItem_User_IdOrderByStartDesc(userId)

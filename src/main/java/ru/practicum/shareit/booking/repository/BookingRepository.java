@@ -26,39 +26,40 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByBookerIdOrderByStartDesc(Long bookingId);
 
     List<Booking> findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(Long bookingId,
-                                                              LocalDateTime end,
-                                                              LocalDateTime start);
+                                                                              LocalDateTime end,
+                                                                              LocalDateTime start);
 
     List<Booking> findByBookerIdAndEndIsBeforeOrderByStartDesc(Long bookingId, LocalDateTime time);
 
     List<Booking> findByBookerIdAndStartIsAfterOrderByStartDesc(Long bookingId, LocalDateTime time);
 
     List<Booking> findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(Long bookerId,
-                                                           LocalDateTime start,
-                                                           Status status);
+                                                                           LocalDateTime start,
+                                                                           Status status);
 
     List<Booking> findByBookerIdAndStatusIsOrderByStartDesc(Long bookingId, Status status);
 
     List<Booking> findByItem_User_IdOrderByStartDesc(Long userId);
 
     List<Booking> findByItem_User_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(Long userId,
-                                                                  LocalDateTime start,
-                                                                  LocalDateTime end);
+                                                                                  LocalDateTime start,
+                                                                                  LocalDateTime end);
 
     List<Booking> findByItem_User_IdAndEndIsBeforeOrderByStartDesc(Long userId, LocalDateTime end);
 
-    List<Booking> findByItem_User_IdAndStartIsAfterOrderByStartDesc(long item_user_id, LocalDateTime start);
+    List<Booking> findByItem_User_IdAndStartIsAfterOrderByStartDesc(Long userId, LocalDateTime start);
 
     List<Booking> findByItem_User_IdAndStartIsAfterAndStatusIsOrderByStartDesc(Long userId,
-                                                               LocalDateTime start,
-                                                               Status status);
+                                                                               LocalDateTime start,
+                                                                               Status status);
 
     List<Booking> findByItem_User_IdAndStatusIsOrderByStartDesc(Long userId, Status status);
 
-   /* @Query("select b from Booking as b join fetch Item as i where i.id = :itemId")*/
     List<Booking> findBookingsByItem_Id(Long itemId);
 
     List<Booking> findByItem_IdAndStatusNotIn(Long itemId, Collection<Status> status);
 
     List<Booking> findByItem_UserId(Long userId);
+
+    List<Booking> findByItem_IdAndBooker_IdAndStatusAndEndBefore(Long item_id, long booker_id, Status status, LocalDateTime end);
 }

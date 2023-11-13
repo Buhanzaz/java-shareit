@@ -7,13 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
-import ru.practicum.shareit.booking.enums.State;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * TODO Sprint add-bookings.
@@ -52,17 +48,13 @@ public class BookingController {
 
     @GetMapping()
     public ResponseEntity<List<BookingDto>> findAllBookingsForUser(@RequestHeader(HEADER_ID_USER) Long userId,
-                                                                   @RequestParam(defaultValue = "ALL") String state,
-                                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
-        return ResponseEntity.ok(bookingService.findAllBookingsForBooker(userId, state, from, size));
+                                                                   @RequestParam(defaultValue = "ALL") String state) {
+        return ResponseEntity.ok(bookingService.findAllBookingsForBooker(userId, state));
     }
 
     @GetMapping(URI_PATH_BOOKINGS_FOR_OWNER)
     public ResponseEntity<List<BookingDto>> getAllBookingsForOwner(@RequestHeader(HEADER_ID_USER) Long userId,
-                                                                   @RequestParam(defaultValue = "ALL") String state,
-                                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
-        return ResponseEntity.ok(bookingService.findAllBookingsForOwner(userId, state, from, size));
+                                                                   @RequestParam(defaultValue = "ALL") String state) {
+        return ResponseEntity.ok(bookingService.findAllBookingsForOwner(userId, state));
     }
 }
