@@ -17,10 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-class ItemServiceImplInMemory implements ItemService {
+class ItemServiceImplInMemory {
 
     ItemRepositoryInMemory itemRepositoryInMemory;
     UserRepositoryInMemory userRepositoryInMemory;
@@ -30,12 +31,12 @@ class ItemServiceImplInMemory implements ItemService {
     @Override
     public ItemDto addItem(Long userId, ItemDto dto) {
         validation.checksUserId(userId);
-        Item item = itemMapper.toModel(dto);
+        Item item = itemMapper.toModelItem(dto);
         User user = userRepositoryInMemory.getUserById(userId);
 
         item.setUser(user);
 
-        return itemMapper.toDto(itemRepositoryInMemory.addItem(item));
+        return itemMapper.toDtoItem(itemRepositoryInMemory.addItem(item));
     }
 
     @Override
@@ -47,7 +48,7 @@ class ItemServiceImplInMemory implements ItemService {
         Item item = getItemByIdWithoutDto(itemId);
 
         itemMapper.updateItem(item, dto);
-        return itemMapper.toDto(item);
+        return itemMapper.toDtoItem(item);
     }
 
     @Override
@@ -55,7 +56,7 @@ class ItemServiceImplInMemory implements ItemService {
         validation.checksUserId(userid);
         validation.checksItemId(itemId);
 
-        return itemMapper.toDto(itemRepositoryInMemory.getItemById(itemId));
+        return itemMapper.toDtoItem(itemRepositoryInMemory.getItemById(itemId));
     }
 
     @Override
@@ -64,7 +65,7 @@ class ItemServiceImplInMemory implements ItemService {
 
         List<Item> items = itemRepositoryInMemory.getAllItemsOwner(userid);
 
-        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
+        return items.stream().map(itemMapper::toDtoItem).collect(Collectors.toList());
     }
 
     @Override
@@ -79,10 +80,10 @@ class ItemServiceImplInMemory implements ItemService {
                 .filter(item -> item.getAvailable().equals(true))
                 .collect(Collectors.toList());
 
-        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
+        return items.stream().map(itemMapper::toDtoItem).collect(Collectors.toList());
     }
 
     private Item getItemByIdWithoutDto(Long itemId) {
         return itemRepositoryInMemory.getItemById(itemId);
     }
-}
+}*/

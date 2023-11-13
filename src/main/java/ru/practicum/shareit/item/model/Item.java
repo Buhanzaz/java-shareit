@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -31,7 +33,7 @@ public class Item {
     Boolean available; //Статус доступности вещи True - доступно, False - нет.
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "ownerId")
     User user; //Владелец вещи ownerId == userId.
 
     @JsonIgnore

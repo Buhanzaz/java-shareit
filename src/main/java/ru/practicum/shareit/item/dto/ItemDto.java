@@ -1,25 +1,27 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
+import ru.practicum.shareit.booking.dto.BookingWithoutItemDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.validation.validationInterface.CreateValidationObject;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
 @Setter
 @Getter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-
     Long id; //Id вещи.
 
     @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
@@ -38,5 +40,9 @@ public class ItemDto {
 
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 
-    Set<Long> reviews; //Собраны id отзывов.
+    BookingWithoutItemDto lastBooking;
+
+    BookingWithoutItemDto nextBooking;
+
+    List<CommentDto> comments;
 }

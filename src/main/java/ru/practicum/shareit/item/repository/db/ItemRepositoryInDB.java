@@ -23,4 +23,7 @@ public interface ItemRepositoryInDB extends JpaRepository<Item, Long> {
             "or upper(i.description) like upper(concat('%', :text, '%')))" +
             "and i.available = true )")
     List<Item> searchItem(@Param("text") String text);
+
+    @Query("select i from Item as i join fetch i.user where i.id = :itemId")
+    Optional<Item> findByIdFetchEgle(@Param("itemId") Long itemId);
 }
