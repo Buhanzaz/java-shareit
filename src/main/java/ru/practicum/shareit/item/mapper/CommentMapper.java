@@ -14,7 +14,7 @@ public abstract class CommentMapper {
     @Mapping(target = "authorName", expression = "java(comment.getAuthor().getName())")
     public abstract CommentDto commentToDto(Comment comment);
 
-    public Comment CommentDtoToModel(CommentDto dto, User user, Item item, LocalDateTime created) {
+    public Comment commentDtoToModel(CommentDto dto, User user, Item item, LocalDateTime created) {
         return Comment.builder()
                 .text(dto.getText())
                 .item(item)

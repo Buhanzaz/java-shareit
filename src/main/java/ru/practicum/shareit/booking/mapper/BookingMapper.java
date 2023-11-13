@@ -18,7 +18,7 @@ public abstract class BookingMapper {
     public abstract BookingDto toDto(Booking booking);
 
     @Mapping(target = "bookerId", expression = "java(booking.getBooker().getId())")
-    public abstract BookingWithoutItemDto BookingToWithoutItemDto(Booking booking);
+    public abstract BookingWithoutItemDto bookingToWithoutItemDto(Booking booking);
 
     public Booking clientRequestDtoToModel(ClientRequestBookingDto dto, User booker, Item item, Status status) {
         if (dto == null) {

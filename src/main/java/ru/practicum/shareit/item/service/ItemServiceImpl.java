@@ -133,7 +133,7 @@ class ItemServiceImpl implements ItemService {
             throw new BookingException("Вы не можете ставить комментарии под вещью которую не бронировали ранее.");
         }
 
-        Comment comment = commentMapper.CommentDtoToModel(dto, user, item, LocalDateTime.now());
+        Comment comment = commentMapper.commentDtoToModel(dto, user, item, LocalDateTime.now());
         Comment save = commentRepository.save(comment);
         return commentMapper.commentToDto(save);
     }
@@ -143,10 +143,10 @@ class ItemServiceImpl implements ItemService {
 
         itemBookings.stream().filter(Booking ->
                         Booking.getStart().isBefore(now)).max(Comparator.comparing(Booking::getEnd))
-                .ifPresent(lastBooking -> itemDto.setLastBooking(bookingMapper.BookingToWithoutItemDto(lastBooking)));
+                .ifPresent(lastBooking -> itemDto.setLastBooking(bookingMapper.bookingToWithoutItemDto(lastBooking)));
 
         itemBookings.stream().filter(Booking ->
                         Booking.getStart().isAfter(now)).min(Comparator.comparing(Booking::getStart))
-                .ifPresent(nextBooking -> itemDto.setNextBooking(bookingMapper.BookingToWithoutItemDto(nextBooking)));
+                .ifPresent(nextBooking -> itemDto.setNextBooking(bookingMapper.bookingToWithoutItemDto(nextBooking)));
     }
 }
