@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import java.util.Set;
 
 /**
  * TODO Sprint add-controllers.
@@ -38,7 +37,4 @@ public class Item {
     @Column(name = "request_id")
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 
-    @Column(name = "reviews_id")
-    @ElementCollection(fetch = FetchType.LAZY)
-    Set<Long> reviews; //Собраны id отзывов.
 }
