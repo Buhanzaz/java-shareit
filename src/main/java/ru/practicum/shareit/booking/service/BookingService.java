@@ -10,7 +10,7 @@ public interface BookingService {
 
     BookingDto ownerResponseToTheBooking(Long userId, Boolean approved, Long bookingId);
 
-    BookingDto findBookingForAuthorOrOwner(Long userId, Long bookingId) throws RuntimeException;
+    BookingDto findBookingForAuthorOrOwner(Long userId, Long bookingId);
 
     List<BookingDto> findAllBookingsForBooker(Long userId, String state);
 

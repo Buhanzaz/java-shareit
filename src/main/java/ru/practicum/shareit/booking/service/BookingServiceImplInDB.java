@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
 import ru.practicum.shareit.booking.enums.Status;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 class BookingServiceImplInDB implements BookingService {
 
@@ -32,27 +34,22 @@ class BookingServiceImplInDB implements BookingService {
 
 
     @Override
+    @Transactional
     public BookingDto addNewBooking(Long userId, ClientRequestBookingDto dto) {
+        validationTimeFromDto(dto);
+
         User booker = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы!"));
         Item item = itemRepository.findByIdFetchEgle(dto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещи с таким id не найдено"));
-
-        validationTimeFromDto(dto);
-
-        Booking booking = bookingMapper.clientRequestToModel(dto, booker, item, Status.WAITING);
+        Booking booking = bookingMapper.clientRequestDtoToModel(dto, booker, item, Status.WAITING);
 
         validationBooking(userId, booking);
-
-
-
-//        booking.setItem(item);
-//        booking.setStatus(Status.WAITING);
-//        booking.setBooker(booker);
 
         return bookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Override
+    @Transactional
     public BookingDto ownerResponseToTheBooking(Long userId, Boolean approved, Long bookingId) {
         Booking booking;
 
@@ -73,6 +70,7 @@ class BookingServiceImplInDB implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto findBookingForAuthorOrOwner(Long userId, Long bookingId) {
         Booking booking;
 
@@ -88,6 +86,7 @@ class BookingServiceImplInDB implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingDto> findAllBookingsForBooker(Long userId, String state) {
         //TODO Доделать представление в виде страниц
         if (bookingRepository.existsById(userId)) {
@@ -132,6 +131,7 @@ class BookingServiceImplInDB implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingDto> findAllBookingsForOwner(Long userId, String state) {
         //TODO Доделать представление в виде страниц
         if (userRepository.existsById(userId)) {

@@ -15,19 +15,13 @@ import ru.practicum.shareit.user.model.User;
 @Mapper(componentModel = "spring")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public abstract class BookingMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "booker", ignore = true)
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "item", ignore = true)
-    public abstract Booking toModel(ClientRequestBookingDto dto);
-
     public abstract BookingDto toDto(Booking booking);
 
     @Mapping(target = "bookerId", expression = "java(booking.getBooker().getId())")
-    public abstract BookingWithoutItemDto toWithoutItemDto(Booking booking);
+    public abstract BookingWithoutItemDto BookingToWithoutItemDto(Booking booking);
 
-    public Booking clientRequestToModel(ClientRequestBookingDto dto, User booker, Item item, Status status) {
-        if ( dto == null ) {
+    public Booking clientRequestDtoToModel(ClientRequestBookingDto dto, User booker, Item item, Status status) {
+        if (dto == null) {
             return null;
         }
         return Booking.builder()

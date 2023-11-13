@@ -40,37 +40,37 @@ public class ItemController {
 
     @PatchMapping(URI_ID_ITEM)
     public ResponseEntity<ItemDto> patchRequestItem(@PathVariable Long itemId,
-                                                    @RequestHeader(HEADER_ID_USER) Long userid,
+                                                    @RequestHeader(HEADER_ID_USER) Long userId,
                                                     @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
-        ItemDto itemDto = itemService.updateItem(itemId, userid, dto);
+        ItemDto itemDto = itemService.updateItem(itemId, userId, dto);
         return ResponseEntity.ok(itemDto);
     }
 
     @GetMapping(URI_ID_ITEM)
     public ResponseEntity<ItemDto> getRequestItem(@PathVariable Long itemId,
-                                                  @RequestHeader(HEADER_ID_USER) Long userid) {
-        ItemDto itemDto = itemService.getItemById(itemId, userid);
+                                                  @RequestHeader(HEADER_ID_USER) Long userId) {
+        ItemDto itemDto = itemService.getItemById(itemId, userId);
         return ResponseEntity.ok(itemDto);
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader(HEADER_ID_USER) Long userid) {
-        List<ItemDto> itemDto = itemService.getAllItemsOwner(userid);
+    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader(HEADER_ID_USER) Long userId) {
+        List<ItemDto> itemDto = itemService.getAllItemsOwner(userId);
         return ResponseEntity.ok(itemDto);
     }
 
     @GetMapping(URI_SEARCH)
     public ResponseEntity<List<ItemDto>> getRequestItemSearch(@RequestParam(name = "text") String itemName,
-                                                              @RequestHeader(HEADER_ID_USER) Long userid) {
-        List<ItemDto> itemDto = itemService.itemSearch(itemName, userid);
+                                                              @RequestHeader(HEADER_ID_USER) Long userId) {
+        List<ItemDto> itemDto = itemService.itemSearch(itemName, userId);
         return ResponseEntity.ok(itemDto);
     }
 
     @PostMapping(URI_ADD_COMMENT)
-    public ResponseEntity<CommentDto> postRequestAddComment(@RequestHeader(HEADER_ID_USER) Long userid,
+    public ResponseEntity<CommentDto> postRequestAddComment(@RequestHeader(HEADER_ID_USER) Long userId,
                                                             @PathVariable Long itemId,
                                                             @RequestBody @Validated CommentDto dto) {
-        CommentDto commentDto = itemService.addComment(userid, itemId, dto);
+        CommentDto commentDto = itemService.addComment(userId, itemId, dto);
         return ResponseEntity.ok(commentDto);
     }
 }
