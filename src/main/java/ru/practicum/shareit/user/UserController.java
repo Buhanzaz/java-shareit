@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user;
 
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class UserController {
-
     UserService userService;
-
-    public UserController(@Qualifier("userServiceImpl") UserService userService) {
-        this.userService = userService;
-    }
 
     private static final String URI_ID_USER = "/{userId}";
 

@@ -31,14 +31,14 @@ public class Item {
     Boolean available; //Статус доступности вещи True - доступно, False - нет.
 
     @ManyToOne
-    @JoinColumn(name = "ownerId")
-    User user; //Владелец вещи ownerId == userId.
+    @JoinColumn(name = "owner_id")
+    User user; //Владелец вещи owner_id == userId.
 
     @JsonIgnore
-    @Column(name = "isRequest")
+    @Column(name = "request_id")
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 
-    @Column(name = "reviews")
+    @Column(name = "reviews_id")
     @ElementCollection(fetch = FetchType.LAZY)
     Set<Long> reviews; //Собраны id отзывов.
 }
