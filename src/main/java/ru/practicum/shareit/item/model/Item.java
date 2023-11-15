@@ -17,13 +17,14 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id; //Id вещи.
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     String name; //Название вещи.
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     String description; //Описание.
 
     @Column(name = "available")
