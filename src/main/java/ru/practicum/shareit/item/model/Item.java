@@ -34,7 +34,7 @@ public class Item {
     User user; //Владелец вещи owner_id == userId.
 
     @JsonIgnore
-    @Column(name = "request_id")
+    @Column(name = "request")
     Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
 
 }
