@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "booking")
+@Table(name = "bookings")
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -36,7 +36,7 @@ public class Booking {
     Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "booker_id", nullable = false)
     User booker;
 
     @Enumerated(value = EnumType.STRING)
