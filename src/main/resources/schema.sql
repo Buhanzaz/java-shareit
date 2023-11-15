@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS items
     name        VARCHAR(255)                            NOT NULL,
     description VARCHAR(255)                            NOT NULL,
     available   BOOLEAN                                 NOT NULL,
-    owner_id    BIGINT REFERENCES users (id),
+    owner_id    LONG REFERENCES users (id),
     request     BOOLEAN,
     CONSTRAINT PK_ITEM_ID UNIQUE (id)
 );
