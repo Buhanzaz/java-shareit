@@ -63,7 +63,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ItemDto getItemById(Long itemId, Long userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
@@ -85,7 +85,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ItemDto> getAllItemsOwner(Long userId) {
         List<Item> items = itemRepository.findAllItemByUser(userId);
         List<Booking> bookings = bookingRepository.findByItem_UserId(userId);
@@ -112,6 +112,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemDto> itemSearch(String text, Long userId) {
         if (text.isBlank() || text.isEmpty()) {
             return Collections.emptyList();
@@ -122,6 +123,7 @@ class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public CommentDto addComment(Long userId, Long itemId, CommentDto dto) throws RuntimeException {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегестрированы."));
         Item item = itemRepository.findById(itemId)

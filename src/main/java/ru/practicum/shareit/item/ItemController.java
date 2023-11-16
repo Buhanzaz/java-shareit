@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item;
 
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/items")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemController {
     ItemService itemService;
@@ -27,9 +28,6 @@ public class ItemController {
     private static final String URI_SEARCH = "/search";
     private static final String URI_ADD_COMMENT = URI_ID_ITEM + "/comment";
 
-    public ItemController(@Qualifier("itemServiceImpl") ItemService itemService) {
-        this.itemService = itemService;
-    }
 
     @PostMapping
     public ResponseEntity<ItemDto> postRequestItem(@RequestHeader(HEADER_ID_USER) Long userId,

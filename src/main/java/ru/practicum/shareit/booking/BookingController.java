@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,16 +17,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/bookings")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingController {
+
     BookingService bookingService;
     private static final String URI_PATH_BOOKING_ID = "/{bookingId}";
     private static final String URI_PATH_BOOKINGS_FOR_OWNER = "/owner";
     private static final String HEADER_ID_USER = "X-Sharer-User-Id";
-
-    public BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
     @PostMapping
     public ResponseEntity<BookingDto> addNewBooking(@RequestHeader(HEADER_ID_USER) Long userId,

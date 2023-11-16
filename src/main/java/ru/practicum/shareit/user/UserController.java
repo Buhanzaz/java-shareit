@@ -21,6 +21,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserController {
+
     UserService userService;
 
     private static final String URI_ID_USER = "/{userId}";

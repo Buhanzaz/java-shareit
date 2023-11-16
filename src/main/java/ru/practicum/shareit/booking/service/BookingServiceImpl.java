@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
+import ru.practicum.shareit.booking.enums.State;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -18,6 +19,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,11 +68,11 @@ class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Вы не зарегистрированы");
         }
 
-        return bookingMapper.toDto(bookingRepository.save(booking));
+        return bookingMapper.toDto(booking);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public BookingDto findBookingForAuthorOrOwner(Long userId, Long bookingId) {
         Booking booking;
 
@@ -86,94 +88,108 @@ class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BookingDto> findAllBookingsForBooker(Long userId, String state) {
+        State stateEnum;
+
         //TODO Доделать представление в виде страниц
-        if (bookingRepository.existsById(userId)) {
+        if (userRepository.existsById(userId)) {
+            try {
+                stateEnum = State.valueOf(state);
+            } catch (IllegalArgumentException e) {
+                throw new EnumException(String.format("Unknown state: %s", state));
+            }
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
-            switch (state) {
-                case "ALL":
+            switch (stateEnum) {
+                case ALL:
                     return bookingRepository.findByBookerIdOrderByStartDesc(userId)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "CURRENT":
+                case CURRENT:
                     return bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, dateTimeNow, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "PAST":
+                case PAST:
                     return bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "FUTURE":
+                case FUTURE:
                     return bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "WAITING":
+                case WAITING:
                     return bookingRepository.findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(userId, dateTimeNow, Status.WAITING)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "REJECTED":
+                case REJECTED:
                     return bookingRepository.findByBookerIdAndStatusIsOrderByStartDesc(userId, Status.REJECTED)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 default:
-                    throw new BadRequestException(String.format("Unknown state: %s", state));
+                    return new ArrayList<>();
             }
         }
         throw new NotFoundException("Вы не зарегистрированы");
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BookingDto> findAllBookingsForOwner(Long userId, String state) {
+        State stateEnum;
+
         //TODO Доделать представление в виде страниц
         if (userRepository.existsById(userId)) {
+            try {
+                stateEnum = State.valueOf(state);
+            } catch (IllegalArgumentException e) {
+                throw new EnumException(String.format("Unknown state: %s", state));
+            }
+
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
-            switch (state) {
-                case "ALL":
+            switch (stateEnum) {
+                case ALL:
                     return bookingRepository.findByItem_User_IdOrderByStartDesc(userId)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "CURRENT":
+                case CURRENT:
                     return bookingRepository.findByItem_User_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, dateTimeNow, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "PAST":
+                case PAST:
                     return bookingRepository.findByItem_User_IdAndEndIsBeforeOrderByStartDesc(userId, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "FUTURE":
+                case FUTURE:
                     return bookingRepository.findByItem_User_IdAndStartIsAfterOrderByStartDesc(userId, dateTimeNow)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "WAITING":
+                case WAITING:
                     return bookingRepository.findByItem_User_IdAndStartIsAfterAndStatusIsOrderByStartDesc(userId, dateTimeNow, Status.WAITING)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                case "REJECTED":
+                case REJECTED:
                     return bookingRepository.findByItem_User_IdAndStatusIsOrderByStartDesc(userId, Status.REJECTED)
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 default:
-                    throw new BadRequestException(String.format("Unknown state: %s", state));
+                    return new ArrayList<>();
             }
-        } else {
-            throw new NotFoundException("Вы не зарегистрированы");
         }
+        throw new NotFoundException("Вы не зарегистрированы");
     }
 
     private void validationTimeFromDto(ClientRequestBookingDto dto) {

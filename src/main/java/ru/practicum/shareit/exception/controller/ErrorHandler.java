@@ -47,6 +47,12 @@ public class ErrorHandler {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForDataException(final EnumException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
     @Data
     @Builder
     public static class ErrorResponse {
