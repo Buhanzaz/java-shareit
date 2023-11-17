@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user.dto;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.validation.validationInterface.CreateValidationObject;
 import ru.practicum.shareit.validation.validationInterface.UpdateValidationObject;
 
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Setter
 @Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     Long id;
 

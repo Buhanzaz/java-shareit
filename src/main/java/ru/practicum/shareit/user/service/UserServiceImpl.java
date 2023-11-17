@@ -4,67 +4,60 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.validation.validationInterface.Validation;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImpl implements UserService {
+class UserServiceImpl implements UserService {
+
     UserRepository userRepository;
-    Validation validation;
     UserMapper userMapper;
 
     @Override
+    @Transactional
     public UserDto addUser(UserDto dto) {
-        User user = userMapper.toModel(dto);
-
-        validation.checksEmail(user.getEmail());
-
-        return userMapper.toDto(userRepository.addUser(user));
+        return userMapper.toDto(userRepository.save(userMapper.toModel(dto)));
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long userId, UserDto dto) {
-        User user = getUserByIdNotDto(userId);
-
-        validation.checksEmailForUpdate(userId, dto.getEmail());
-
-        return userMapper.toDto(userMapper.updateUser(user, dto));
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Юзер с id " + userId + " не найден")
+        );
+        userMapper.updateUser(user, dto);
+        return userMapper.toDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserById(Long userId) {
-        validation.checksUserId(userId);
-
-        User user = userRepository.getUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Юзер с id " + userId + " не найден")
+        );
 
         return userMapper.toDto(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getAllUsers() {
-        List<User> usersList = userRepository.getAllUsers();
-
-        return usersList.stream().map(userMapper::toDto).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public void deleteUserById(Long userId) {
-        validation.checksUserId(userId);
-        userRepository.deleteUserById(userId);
+        userRepository.deleteById(userId);
     }
-
-    private User getUserByIdNotDto(Long userId) {
-        validation.checksUserId(userId);
-
-        return userRepository.getUserById(userId);
-    }
-
 }

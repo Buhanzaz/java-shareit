@@ -18,16 +18,29 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/users")
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class UserController {
+
     UserService userService;
+
     private static final String URI_ID_USER = "/{userId}";
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getRequestAllUsers() {
+        List<UserDto> userDtoList = userService.getAllUsers();
+        return ResponseEntity.ok(userDtoList);
+    }
 
     @PostMapping
     public ResponseEntity<UserDto> postRequestUser(@RequestBody @Validated(CreateValidationObject.class) UserDto dto) {
         UserDto userDto = userService.addUser(dto);
         return ResponseEntity.ok(userDto);
+    }
+
+    @DeleteMapping(path = URI_ID_USER)
+    public void deleteRequestUser(@PathVariable Long userId) {
+        userService.deleteUserById(userId);
     }
 
     @PatchMapping(path = URI_ID_USER)
@@ -42,14 +55,4 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getRequestAllUsers() {
-        List<UserDto> userDtoList = userService.getAllUsers();
-        return ResponseEntity.ok(userDtoList);
-    }
-
-    @DeleteMapping(path = URI_ID_USER)
-    public void deleteRequestUser(@PathVariable Long userId) {
-        userService.deleteUserById(userId);
-    }
 }
