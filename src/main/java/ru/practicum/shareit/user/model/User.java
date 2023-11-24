@@ -12,7 +12,7 @@ import javax.persistence.*;
  */
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
