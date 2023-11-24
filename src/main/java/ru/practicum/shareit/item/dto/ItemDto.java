@@ -38,7 +38,7 @@ public class ItemDto {
 
     User user; //Владелец вещи
 
-    Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
+    Long requestId;
 
     BookingWithoutItemDto lastBooking;
 
