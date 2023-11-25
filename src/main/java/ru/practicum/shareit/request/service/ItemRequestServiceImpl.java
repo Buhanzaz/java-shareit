@@ -29,31 +29,35 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     UserRepository userRepository;
     ItemRequestMapper itemRequestMapper;
 
+    Sort sortBy = Sort.by(Sort.Direction.DESC, "created");
+
     @Override
     public ItemRequestDto addItemRequest(Long creatorId, ItemRequestDto dto) {
         User creator = userRepository.findById(creatorId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы!"));
 
         ItemRequest saveItemRequest = itemRequestRepository.save(itemRequestMapper.toModel(dto, creator));
+
         return itemRequestMapper.toDto(saveItemRequest);
     }
 
     @Override
-    public List<ItemRequestDto> searchAllItemsRequestsCreator(Long creatorId) {
+    public List<ItemRequestDto> searchAllItemsRequestsCreator(Long creatorId, Integer from, Integer size) {
         validationUser(creatorId);
 
-        List<ItemRequest> itemRequests = itemRequestRepository.searchItemRequestByCreator_IdOrderByCreatedAsc(creatorId);
+        Pageable page = PageRequest.of(from, size, sortBy);
+
+        List<ItemRequest> itemRequests = itemRequestRepository
+                .searchItemRequestByCreator_IdOrderByCreatedAsc(creatorId, page);
 
         return itemRequests.stream().map(itemRequestMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<ItemRequestDto> searchAllItemsRequests(Long userId, Integer from, Integer size) {
-        validationRequestParam(from, size);
-
         validationUser(userId);
 
-        Sort sortBy = Sort.by(Sort.Direction.ASC, "created");
-        Pageable page = PageRequest.of(from, size, sortBy);
+        Pageable page = PageRequest.of(from / size, size, sortBy);
+
         Page<ItemRequest> itemRequestPage = itemRequestRepository.findAll(page);
 
         return itemRequestPage.stream()
@@ -64,17 +68,16 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto searchAllItemsRequestsById(Long userId, Long requestId) {
-        return null;
+        validationUser(userId);
+        ItemRequest itemRequest = itemRequestRepository
+                .searchItemRequestByIdOrderByCreatedAsc(requestId)
+                .orElseThrow(
+                        () -> new NotFoundException(String.format("Запрос с id - %d, не найдет", requestId))
+                );
+
+        return itemRequestMapper.toDto(itemRequest);
     }
 
-    private void validationRequestParam(Integer from, Integer size) {
-        if (from == null || from < 0) {
-            throw new ValidateException("Неправильно заданы параметры.");
-        }
-        if (size == null || size < 0) {
-            throw new ValidateException("Неправильно заданы параметры.");
-        }
-    }
 
     private void validationUser(Long userId) {
         if (!userRepository.existsById(userId)) {

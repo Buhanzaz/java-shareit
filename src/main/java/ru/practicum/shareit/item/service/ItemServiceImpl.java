@@ -3,6 +3,9 @@ package ru.practicum.shareit.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.enums.Status;
@@ -47,6 +50,8 @@ class ItemServiceImpl implements ItemService {
     CommentMapper commentMapper;
     BookingMapper bookingMapper;
 
+    Sort sortBy = Sort.by(Sort.Direction.ASC, "id");
+
     @Override
     @Transactional
     public ItemDto addItem(Long userId, ItemDto dto) {
@@ -84,6 +89,8 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDto getItemById(Long itemId, Long userId) {
+        //TODO Подумать над новой реализацией
+        /*Первая причина видится в использовании кучи запросов что можно изменить, так же думаю что и памяти тратится оч много*/
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
         ItemDto itemDto = itemMapper.toDtoItem(item);
@@ -106,6 +113,8 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<ItemDto> getAllItemsOwner(Long userId) {
+        //TODO Подумать над новой реализацией
+        /*Первая причина видится в использовании кучи запросов что можно изменить, так же думаю что и памяти тратится оч много*/
         List<Item> items = itemRepository.findAllItemByUser(userId);
         List<Booking> bookings = bookingRepository.findByItem_UserId(userId);
         List<ItemDto> itemsDto = items.stream().map(itemMapper::toDtoItem).collect(Collectors.toList());
@@ -132,11 +141,13 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> itemSearch(String text, Long userId) {
+    public List<ItemDto> itemSearch(String text, Long userId, Integer from, Integer size) {
         if (text.isBlank() || text.isEmpty()) {
             return Collections.emptyList();
         }
-        return itemRepository.searchItem(text).stream()
+        Pageable page = PageRequest.of(from / size, size, sortBy);
+
+        return itemRepository.searchItem(text, page).stream()
                 .map(itemMapper::toDtoItem)
                 .collect(Collectors.toList());
     }
@@ -144,7 +155,7 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentDto addComment(Long userId, Long itemId, CommentDto dto) throws RuntimeException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегестрированы."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы."));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещи с id : %d не существует.", itemId)));
         List<Booking> bookings = bookingRepository.findByItem_IdAndBooker_IdAndStatusAndEndBefore(
