@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.*;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 public class ErrorHandler {
 
@@ -50,6 +52,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlerForDataException(final EnumException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForViolationException(ConstraintViolationException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 
