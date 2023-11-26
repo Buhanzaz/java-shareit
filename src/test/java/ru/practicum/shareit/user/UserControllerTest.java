@@ -79,7 +79,9 @@ class UserControllerTest {
 
     @Test
     @SneakyThrows
-    void postRequestUser()
+    void postRequestUser(){
+
+    }
 
     @Test
     void deleteRequestUser() {
