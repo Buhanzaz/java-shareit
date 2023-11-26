@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Table(name = "item_request", schema = "public")
+@Table(name = "requests", schema = "public")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
     @Id
@@ -32,7 +32,7 @@ public class ItemRequest {
     @Column(name = "description")
     String description;
 
-    @Column(name = "created")
+    @Column(name = "created_time")
     LocalDateTime created;
 
     @OneToMany
