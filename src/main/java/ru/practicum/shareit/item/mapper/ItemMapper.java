@@ -11,6 +11,7 @@ public interface ItemMapper {
 
     @Mapping(target = "lastBooking", ignore = true)
     @Mapping(target = "nextBooking", ignore = true)
+    @Mapping(target = "requestId", source = "itemRequest.id")
     ItemDto toDtoItem(Item item);
 
 

@@ -55,11 +55,10 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto addItem(Long userId, ItemDto dto) {
-
-
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("Юзер с id " + userId + " не найден")
         );
+
         Item modelItem = itemMapper.toModelItem(dto);
 
         if (dto.getRequestId() != null) {

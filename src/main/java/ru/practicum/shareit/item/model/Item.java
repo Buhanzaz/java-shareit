@@ -36,10 +36,7 @@ public class Item {
     @JoinColumn(name = "owner_id")
     User user; //Владелец вещи owner_id == userId.
 
-    @Column(name = "request_id")
-    private Long requestId;
-
     @ManyToOne
-    @JoinColumn(name="item_request_id")
+    @JoinColumn(name="request_id")
     ItemRequest itemRequest;
 }

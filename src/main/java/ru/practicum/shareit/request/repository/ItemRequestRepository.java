@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
 
-    List<ItemRequest> searchItemRequestByCreator_IdOrderByCreatedAsc(Long creatorId, Pageable page);
-    Optional<ItemRequest> searchItemRequestByIdOrderByCreatedAsc(Long creatorId);
+    List<ItemRequest> searchItemRequestByCreatorId(Long creatorId, Pageable page);
+    Optional<ItemRequest> searchItemRequestById(Long creatorId);
 }

@@ -47,7 +47,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         Pageable page = PageRequest.of(from, size, sortBy);
 
         List<ItemRequest> itemRequests = itemRequestRepository
-                .searchItemRequestByCreator_IdOrderByCreatedAsc(creatorId, page);
+                .searchItemRequestByCreatorId(creatorId, page);
 
         return itemRequests.stream().map(itemRequestMapper::toDto).collect(Collectors.toList());
     }
@@ -70,7 +70,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto searchAllItemsRequestsById(Long userId, Long requestId) {
         validationUser(userId);
         ItemRequest itemRequest = itemRequestRepository
-                .searchItemRequestByIdOrderByCreatedAsc(requestId)
+                .searchItemRequestById(requestId)
                 .orElseThrow(
                         () -> new NotFoundException(String.format("Запрос с id - %d, не найдет", requestId))
                 );
