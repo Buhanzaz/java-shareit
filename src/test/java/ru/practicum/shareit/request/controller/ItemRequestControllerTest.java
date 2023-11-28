@@ -36,7 +36,7 @@ class ItemRequestControllerTest {
     final ItemRequestServiceImpl itemRequestService;
     final MockMvc mockMvc;
     final ObjectMapper objectMapper;
-    final static String HEADER_ID_USER = "X-Sharer-User-Id";
+    final String headerIdUser = "X-Sharer-User-Id";
     ItemRequestDto onlyDescriptionRequestDto;
     ItemRequestDto fullRequestDto;
 
@@ -68,7 +68,7 @@ class ItemRequestControllerTest {
                 .thenReturn(fullRequestDto);
 
         String result = mockMvc.perform(post("/requests")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(onlyDescriptionRequestDto)))
                 .andExpect(status().isOk())
@@ -89,7 +89,7 @@ class ItemRequestControllerTest {
                 .thenReturn(itemRequestDtoList);
 
         String result = mockMvc.perform(get("/requests")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .param("from", "0")
                         .param("size", "1"))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ class ItemRequestControllerTest {
                 .thenReturn(itemRequestDtoList);
 
         String result = mockMvc.perform(get("/requests/all")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .param("from", "0")
                         .param("size", "1"))
                 .andExpect(status().isOk())
@@ -126,7 +126,7 @@ class ItemRequestControllerTest {
                 .thenReturn(fullRequestDto);
 
         String result = mockMvc.perform(get("/requests/{requestId}", fullRequestDto.getId())
-                        .header(HEADER_ID_USER, 1))
+                        .header(headerIdUser, 1))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

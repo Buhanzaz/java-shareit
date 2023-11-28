@@ -38,7 +38,7 @@ class BookingControllerTest {
     final BookingService bookingService;
     final MockMvc mockMvc;
     final ObjectMapper objectMapper;
-    final static String HEADER_ID_USER = "X-Sharer-User-Id";
+    final String headerIdUser = "X-Sharer-User-Id";
 
     ItemDto itemDto;
     UserDto userDto;
@@ -93,7 +93,7 @@ class BookingControllerTest {
                 .thenReturn(bookingDto);
 
         String result = mockMvc.perform(post("/bookings")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(clientRequestBookingDto)))
                 .andExpect(status().isOk())
@@ -114,7 +114,7 @@ class BookingControllerTest {
 
         String result = mockMvc.perform(patch("/bookings/{bookingId}", bookingDto.getId())
                         .param("approved", "true")
-                        .header(HEADER_ID_USER, userDto.getId())
+                        .header(headerIdUser, userDto.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -135,7 +135,7 @@ class BookingControllerTest {
 
         String result = mockMvc.perform(get("/bookings/{bookingId}", bookingDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER_ID_USER, userDto.getId()))
+                        .header(headerIdUser, userDto.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -152,7 +152,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingDto));
 
         String result = mockMvc.perform(get("/bookings")
-                        .header(HEADER_ID_USER, userDto.getId())
+                        .header(headerIdUser, userDto.getId())
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "10")
@@ -171,7 +171,7 @@ class BookingControllerTest {
                 .thenReturn(List.of(bookingDto));
 
         String result = mockMvc.perform(get("/bookings/owner")
-                        .header(HEADER_ID_USER, userDto.getId())
+                        .header(headerIdUser, userDto.getId())
                         .param("state", "ALL")
                         .param("from", "0")
                         .param("size", "5")

@@ -38,6 +38,6 @@ public class Item {
     User user; //Владелец вещи owner_id == userId.
 
     @ManyToOne
-    @JoinColumn(name="request_id")
+    @JoinColumn(name = "request_id")
     ItemRequest itemRequest;
 }

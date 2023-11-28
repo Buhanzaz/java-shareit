@@ -38,7 +38,7 @@ class ItemControllerTest {
     final ItemService itemService;
     final MockMvc mockMvc;
     final ObjectMapper objectMapper;
-    final static String HEADER_ID_USER = "X-Sharer-User-Id";
+    final String headerIdUser = "X-Sharer-User-Id";
 
     Item item;
     ItemDto itemDto;
@@ -83,7 +83,7 @@ class ItemControllerTest {
                 .thenReturn(itemDto);
 
         String result = mockMvc.perform(post("/items")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -108,7 +108,7 @@ class ItemControllerTest {
                 .thenReturn(updateItemDto);
 
         String result = mockMvc.perform(patch("/items/{itemId}", item.getId())
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .content(objectMapper.writeValueAsString(updateItemDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -134,7 +134,7 @@ class ItemControllerTest {
                 .thenReturn(itemDto);
 
         String result = mockMvc.perform(get("/items/{itemId}", itemDto.getId())
-                        .header(HEADER_ID_USER, 1))
+                        .header(headerIdUser, 1))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -154,7 +154,7 @@ class ItemControllerTest {
                 .thenReturn(itemDtoList);
 
         String result = mockMvc.perform(get("/items", itemDto.getId())
-                        .header(HEADER_ID_USER, 1))
+                        .header(headerIdUser, 1))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -175,7 +175,7 @@ class ItemControllerTest {
                         .param("from", "0")
                         .param("size", "1")
                         .param("text", "test")
-                        .header(HEADER_ID_USER, 1))
+                        .header(headerIdUser, 1))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -191,7 +191,7 @@ class ItemControllerTest {
                 .thenReturn(commentDto);
 
         String result = mockMvc.perform(post("/items/1/comment")
-                        .header(HEADER_ID_USER, 1)
+                        .header(headerIdUser, 1)
                         .content(objectMapper.writeValueAsString(commentDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

@@ -103,9 +103,10 @@ class BookingServiceImpl implements BookingService {
             } catch (IllegalArgumentException e) {
                 throw new EnumException(String.format("Unknown state: %s", state));
             }
+
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
-            Pageable page = PageRequest.of(from/size, size, bySort);
+            Pageable page = PageRequest.of(from / size, size, bySort);
 
             switch (stateEnum) {
                 case ALL:
@@ -158,7 +159,7 @@ class BookingServiceImpl implements BookingService {
             }
 
             LocalDateTime dateTimeNow = LocalDateTime.now();
-            Pageable page = PageRequest.of(from/size, size, bySort);
+            Pageable page = PageRequest.of(from / size, size, bySort);
 
             switch (stateEnum) {
                 case ALL:
@@ -208,11 +209,5 @@ class BookingServiceImpl implements BookingService {
             throw new ValidateException("Вещь уже забронирована");
         if (userId.equals(booking.getItem().getUser().getId()))
             throw new NotFoundException("Нельзя бронировать вещь у самого себя");
-    }
-
-    private void validationPagination(Integer from, Integer size) {
-        if (from < 0 || size <= 0) {
-
-        }
     }
 }

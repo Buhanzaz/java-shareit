@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public interface ItemRequestMapper {
 
     ItemRequestDto toDto(ItemRequest itemRequest);
+
     @Mapping(target = "requestId", source = "itemRequest.id")
     ItemDto itemToItemDto(Item item);
 
