@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Table(name = "requests", schema = "public")
+@Table(name = "item_request", schema = "public")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
     @Id
