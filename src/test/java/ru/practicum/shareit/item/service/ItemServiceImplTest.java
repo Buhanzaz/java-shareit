@@ -171,9 +171,9 @@ class ItemServiceImplTest {
                 .booker(secondUser)
                 .status(Status.APPROVED).build();
 
-        lastBooking = Booking.builder()
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().minusDays(2))
+        nextBooking = Booking.builder()
+                .start(LocalDateTime.now().plusDays(2))
+                .end(LocalDateTime.now().plusDays(1))
                 .item(bookingItem)
                 .booker(secondUser)
                 .status(Status.APPROVED).build();
