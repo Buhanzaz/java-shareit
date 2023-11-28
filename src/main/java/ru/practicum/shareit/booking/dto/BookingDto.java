@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
  */
 @Setter
 @Getter
+@Builder
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor

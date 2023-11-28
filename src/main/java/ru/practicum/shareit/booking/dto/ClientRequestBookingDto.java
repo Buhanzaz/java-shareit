@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Future;
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClientRequestBookingDto {
     @NotNull(message = "Поле itemId не может быть пустым")
