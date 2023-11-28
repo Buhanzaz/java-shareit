@@ -94,7 +94,7 @@ class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
         ItemDto itemDto = itemMapper.toDtoItem(item);
 
-        if (item.getUser().getId() == userId) {
+        if (Objects.equals(item.getUser().getId(), userId)) {
             List<Booking> bookings = bookingRepository.findByItem_IdAndStatusNotIn(
                     itemId, List.of(Status.REJECTED, Status.CANCELED));
 

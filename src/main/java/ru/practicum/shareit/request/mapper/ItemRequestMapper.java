@@ -17,7 +17,6 @@ public interface ItemRequestMapper {
     @Mapping(target = "requestId", source = "itemRequest.id")
     ItemDto itemToItemDto(Item item);
 
-
     default ItemRequest toModel(ItemRequestDto dto, User creator) {
         return ItemRequest.builder()
                 .description(dto.getDescription())

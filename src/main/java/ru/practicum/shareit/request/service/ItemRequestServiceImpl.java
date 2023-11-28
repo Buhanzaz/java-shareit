@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -18,6 +17,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +61,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         Page<ItemRequest> itemRequestPage = itemRequestRepository.findAll(page);
 
         return itemRequestPage.stream()
-                .filter(itemRequest -> itemRequest.getCreator().getId() != userId)
+                .filter(itemRequest -> !Objects.equals(itemRequest.getCreator().getId(), userId))
                 .map(itemRequestMapper::toDto)
                 .collect(Collectors.toList());
     }

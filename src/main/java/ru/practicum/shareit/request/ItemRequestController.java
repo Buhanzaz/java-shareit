@@ -58,7 +58,7 @@ public class ItemRequestController {
     @GetMapping(path = "/{requestId}")
     public ResponseEntity<ItemRequestDto> getMappingSearchItemsRequestsById(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                                            @PathVariable @Min(1) Long requestId) {
+            @PathVariable @Min(1) Long requestId) {
 
         return ResponseEntity.ok(itemRequestService.searchAllItemsRequestsById(userId, requestId));
     }

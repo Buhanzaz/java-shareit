@@ -14,7 +14,6 @@ public interface ItemMapper {
     @Mapping(target = "requestId", source = "itemRequest.id")
     ItemDto toDtoItem(Item item);
 
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "itemRequest", ignore = true)
