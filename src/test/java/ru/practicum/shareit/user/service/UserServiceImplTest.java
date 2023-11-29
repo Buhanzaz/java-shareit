@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,7 +32,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UserServiceImplTest {
 
-    final UserServiceImpl userService;
+    final UserService userService;
 
     UserDto firstUserDto;
     UserDto secondUserDto;
@@ -55,6 +59,19 @@ class UserServiceImplTest {
     }
 
     @Test
+    void addUserErrorDuplicateEmail() {
+        userService.addUser(firstUserDto);
+        secondUserDto.setEmail(firstUserDto.getEmail());
+
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class,
+                () -> userService.addUser(secondUserDto));
+
+        assertEquals("could not execute statement; SQL [n/a]; constraint [null]; " +
+                "nested exception is org.hibernate.exception.ConstraintViolationException: " +
+                "could not execute statement", exception.getMessage());
+    }
+
+    @Test
     void updateUser() {
         UserDto createUser = userService.addUser(firstUserDto);
         UserDto updateUser = userService.updateUser(createUser.getId(), secondUserDto);
@@ -63,6 +80,27 @@ class UserServiceImplTest {
         assertThat(updateUser).usingRecursiveComparison().isEqualTo(getUser);
     }
 
+    @Test
+    void updateUserFailEmailExists() {
+        userService.addUser(firstUserDto);
+        userService.addUser(secondUserDto);
+        secondUserDto.setEmail(firstUserDto.getEmail());
+
+        InvalidDataAccessApiUsageException exception = assertThrows(InvalidDataAccessApiUsageException.class,
+                () -> userService.updateUser(secondUserDto.getId(), secondUserDto));
+
+        assertEquals("The given id must not be null!; nested exception is java.lang.IllegalArgumentException: The given id must not be null!", exception.getMessage());
+    }
+
+    @Test
+    void updateUserNotFound() {
+        firstUserDto.setId(1L);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> userService.updateUser(firstUserDto.getId(), firstUserDto));
+
+        assertEquals("Юзер с id " + firstUserDto.getId() + " не найден", exception.getMessage());
+    }
 
     @Test
     void getAllUsers() {

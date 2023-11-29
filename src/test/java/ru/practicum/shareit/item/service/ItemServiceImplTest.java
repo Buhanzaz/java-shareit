@@ -14,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -25,6 +28,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,9 +38,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ItemServiceImplTest {
-    final ItemServiceImpl itemService;
+    final ItemService itemService;
     final UserRepository userRepository;
     final BookingRepository bookingRepository;
+    final ItemRequestService itemRequestService;
 
     ItemDto itemDto;
     ItemDto updateItemDto;
@@ -45,7 +50,7 @@ class ItemServiceImplTest {
     User secondUser;
     Booking lastBooking;
     Booking nextBooking;
-
+    ItemRequestDto onlyDescriptionRequestDto;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +74,6 @@ class ItemServiceImplTest {
                 .created(LocalDateTime.now())
                 .build();
 
-
         firstUser = User.builder()
                 .id(1L)
                 .name("Test Name")
@@ -81,16 +85,44 @@ class ItemServiceImplTest {
                 .name("Test Name 2")
                 .email("Test2@mail.com")
                 .build();
+
+        onlyDescriptionRequestDto = ItemRequestDto.builder()
+                .description("Test Description")
+                .build();
     }
 
     @Test
     void addAndGetByIdItem() {
-        User savedUser = userRepository.save(firstUser);
+        firstUser = userRepository.save(firstUser);
 
-        ItemDto createItem = itemService.addItem(savedUser.getId(), itemDto);
-        ItemDto getItem = itemService.getItemById(savedUser.getId(), createItem.getId());
+        ItemRequestDto savedRequest = itemRequestService.addItemRequest(firstUser.getId(), onlyDescriptionRequestDto);
+
+        itemDto.setRequestId(savedRequest.getId());
+
+        ItemDto createItem = itemService.addItem(firstUser.getId(), itemDto);
+        ItemDto getItem = itemService.getItemById(firstUser.getId(), createItem.getId());
 
         assertThat(createItem).usingRecursiveComparison().ignoringFields("comments").isEqualTo(getItem);
+    }
+
+    @Test
+    void addItemNotFoundExceptionUser() {
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> itemService.addItem(firstUser.getId(), itemDto));
+
+        assertEquals("Юзер с id " + firstUser.getId() + " не найден", exception.getMessage());
+    }
+
+    @Test
+    void addItemNotFoundExceptionItemRequest() {
+        userRepository.save(firstUser);
+        itemDto.setRequestId(1L);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> itemService.addItem(firstUser.getId(), itemDto));
+
+        assertEquals(String.format("Запроса на создание вещи с id %d не найдено",
+                itemDto.getRequestId()), exception.getMessage());
     }
 
     @Test
@@ -105,7 +137,6 @@ class ItemServiceImplTest {
         assertEquals(updatedItem.getDescription(), updateItemDto.getDescription());
         assertEquals(updatedItem.getAvailable(), updateItemDto.getAvailable());
     }
-
 
     @Test
     void getAllItemsOwner() {
@@ -140,6 +171,13 @@ class ItemServiceImplTest {
                 .ignoringFields("comments").isEqualTo(createItem1);
         assertThat(findItems.get(1)).usingRecursiveComparison()
                 .ignoringFields("comments").isEqualTo(createItem2);
+    }
+
+    @Test
+    void itemSearchEmptyList() {
+        List<ItemDto> findItems = itemService.itemSearch("", firstUser.getId(), 0, 2);
+
+        assertThat(findItems.size()).isEqualTo(0);
     }
 
     @Test

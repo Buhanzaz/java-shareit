@@ -17,6 +17,8 @@ import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.BookingException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @AutoConfigureTestDatabase
@@ -97,6 +100,16 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void addNewBookingNotFoundExceptionUser() {
+        firstUser.setId(1L);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> bookingService.addNewBooking(firstUser.getId(), clientRequestBookingDto));
+
+        assertEquals("Вы не зарегистрированы!", exception.getMessage());
+    }
+
+    @Test
     void ownerResponseToTheBooking_true() {
         User savedUser = userRepository.save(firstUser);
 
@@ -131,6 +144,41 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void ownerResponseToTheBookingException() {
+        firstUser = userRepository.save(firstUser);
+
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+
+        BookingDto savedBooking = bookingService.addNewBooking(firstUser.getId(), clientRequestBookingDto);
+
+        bookingService
+                .ownerResponseToTheBooking(secondUser.getId(), true, savedBooking.getId());
+
+        BookingException exception = assertThrows(BookingException.class,
+                () -> bookingService
+                        .ownerResponseToTheBooking(secondUser.getId(), true, savedBooking.getId()));
+
+        assertEquals("Вы уже подтвердили бронирование вашей вещи.", exception.getMessage());
+    }
+
+    @Test
+    void ownerResponseToTheNotFoundExceptionUser() {
+        firstUser = userRepository.save(firstUser);
+
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+
+        BookingDto savedBooking = bookingService.addNewBooking(firstUser.getId(), clientRequestBookingDto);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> bookingService
+                        .ownerResponseToTheBooking(3L, true, savedBooking.getId()));
+
+        assertEquals("Вы не зарегистрированы", exception.getMessage());
+    }
+
+    @Test
     void findBookingForAuthorOrOwner() {
         User savedUser = userRepository.save(firstUser);
 
@@ -145,6 +193,15 @@ class BookingServiceImplTest {
                 .findBookingForAuthorOrOwner(secondUser.getId(), savedBooking.getId());
 
         assertThat(approvedBooking).usingRecursiveComparison().isEqualTo(findBooking);
+    }
+
+    @Test
+    void findBookingForAuthorOrOwnerNotFoundExceptionUser() {
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> bookingService
+                        .findBookingForAuthorOrOwner(1L, 1L));
+
+        assertEquals("Вы не зарегистрированы", exception.getMessage());
     }
 
     @Test

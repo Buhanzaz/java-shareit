@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -18,6 +19,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @Transactional
@@ -78,6 +81,15 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
+    void searchAllItemsRequestsCreatorNotFoundUser() {
+        firstUser.setId(1L);
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> itemRequestService.searchAllItemsRequestsCreator(firstUser.getId(), 0, 2));
+
+        assertEquals("Вы не зарегистрированы!", exception.getMessage());
+    }
+
+    @Test
     void searchAllItemsRequests() {
         userRepository.save(firstUser);
         userRepository.save(secondUser);
@@ -89,4 +101,13 @@ class ItemRequestServiceImplTest {
         assertThat(otherRequest.get(0)).usingRecursiveComparison().isEqualTo(findRequest);
     }
 
+    @Test
+    void searchAllItemsRequestsByIdNotFound() {
+        firstUser = userRepository.save(firstUser);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> itemRequestService.searchAllItemsRequestsById(firstUser.getId(), 1L));
+
+        assertEquals(String.format("Запрос с id - %d, не найдет", 1L), exception.getMessage());
+    }
 }
