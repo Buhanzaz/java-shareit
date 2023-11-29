@@ -308,6 +308,42 @@ class BookingServiceImplTest {
 
     @Test
     @SneakyThrows
+    void findAllBookingsForBooker_all_isNotFound() {
+        userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+        itemRepository.save(secondItem);
+
+        Booking currentBookingForItem1 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(firstItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        Thread.sleep(25);
+
+        Booking currentBookingForItem2 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(secondItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        bookingRepository.save(currentBookingForItem1);
+        bookingRepository.save(currentBookingForItem2);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> bookingService
+                        .findAllBookingsForBooker(99L, "ALL", 0, 10));
+
+        assertEquals("Вы не зарегистрированы", exception.getMessage());
+    }
+
+    @Test
+    @SneakyThrows
     void findAllBookingsForBooker_current_isOk() {
         userRepository.save(firstUser);
         userRepository.save(secondUser);
@@ -548,6 +584,78 @@ class BookingServiceImplTest {
 
         assertEquals(bookingId.get(0), currentBookingForItem2.getId());
         assertEquals(bookingId.get(1), currentBookingForItem1.getId());
+    }
+
+    @Test
+    @SneakyThrows
+    void findAllBookingsForOwner_all_isEnumError() {
+        userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+        itemRepository.save(secondItem);
+
+        Booking currentBookingForItem1 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(firstItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        Thread.sleep(25);
+
+        Booking currentBookingForItem2 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(secondItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        bookingRepository.save(currentBookingForItem1);
+        bookingRepository.save(currentBookingForItem2);
+
+        EnumException exception = assertThrows(EnumException.class,
+                () -> bookingService
+                        .findAllBookingsForOwner(secondUser.getId(), "TEST", 0, 10));
+
+        assertEquals("Unknown state: TEST", exception.getMessage());
+    }
+
+    @Test
+    @SneakyThrows
+    void findAllBookingsForOwner_all_isNotFound() {
+        userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+        itemRepository.save(secondItem);
+
+        Booking currentBookingForItem1 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(firstItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        Thread.sleep(25);
+
+        Booking currentBookingForItem2 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(secondItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        bookingRepository.save(currentBookingForItem1);
+        bookingRepository.save(currentBookingForItem2);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> bookingService
+                        .findAllBookingsForOwner(99L, "ALL", 0, 10));
+
+        assertEquals("Вы не зарегистрированы", exception.getMessage());
     }
 
     @Test

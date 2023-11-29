@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -192,6 +193,16 @@ class ItemServiceImplTest {
         ItemDto itemById = itemService.getItemById(createItem.getId(), savedUser.getId());
 
         assertEquals(itemById.getComments().get(0).getText(), commentDto.getText());
+    }
+
+    @Test
+    void addCommentBookingException() {
+        User savedUser = userRepository.save(firstUser);
+        ItemDto createItem = itemService.addItem(savedUser.getId(), itemDto);
+        BookingException exception = assertThrows(BookingException.class,
+                () -> itemService.addComment(savedUser.getId(), createItem.getId(), commentDto));
+
+        assertEquals("Вы не можете ставить комментарии под вещью которую не бронировали ранее.", exception.getMessage());
     }
 
     private void createLastAndNextBookings(ItemDto item, User firstUser, User secondUser) {

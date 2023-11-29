@@ -22,7 +22,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,8 +141,6 @@ class BookingServiceImpl implements BookingService {
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                default:
-                    return new ArrayList<>();
             }
         }
         throw new NotFoundException("Вы не зарегистрированы");
@@ -195,8 +192,6 @@ class BookingServiceImpl implements BookingService {
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
-                default:
-                    return new ArrayList<>();
             }
         }
         throw new NotFoundException("Вы не зарегистрированы");
