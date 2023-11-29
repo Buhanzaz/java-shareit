@@ -17,8 +17,7 @@ import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.BookingException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -97,6 +96,33 @@ class BookingServiceImplTest {
         assertThat(savedBooking).usingRecursiveComparison().ignoringFields("start", "end")
                 .isEqualTo(findBooking);
 
+    }
+
+    @Test
+    void addNewBookingValidateException() {
+        User savedUser = userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        firstItem.setAvailable(false);
+        itemRepository.save(firstItem);
+
+        ValidateException exception = assertThrows(ValidateException.class,
+                () -> bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto));
+
+        assertEquals("Вещь уже забронирована", exception.getMessage());
+    }
+
+    @Test
+    void addNewBookingDataTimeException() {
+        User savedUser = userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+
+        clientRequestBookingDto.setEnd(LocalDateTime.now().minusDays(3));
+
+        DataTimeException exception = assertThrows(DataTimeException.class,
+                () -> bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto));
+
+        assertEquals("Ошибка! Начало бронирования не может быть позже конца бронирования!", exception.getMessage());
     }
 
     @Test
@@ -242,6 +268,42 @@ class BookingServiceImplTest {
 
         assertEquals(bookingId.get(0), currentBookingForItem2.getId());
         assertEquals(bookingId.get(1), currentBookingForItem1.getId());
+    }
+
+    @Test
+    @SneakyThrows
+    void findAllBookingsForBooker_all_isEnumError() {
+        userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+        itemRepository.save(secondItem);
+
+        Booking currentBookingForItem1 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(firstItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        Thread.sleep(25);
+
+        Booking currentBookingForItem2 = Booking.builder()
+                .start(LocalDateTime.now().minusDays(1))
+                .end(LocalDateTime.now().plusDays(1))
+                .item(secondItem)
+                .booker(secondUser)
+                .status(Status.APPROVED)
+                .build();
+
+        bookingRepository.save(currentBookingForItem1);
+        bookingRepository.save(currentBookingForItem2);
+
+        EnumException exception = assertThrows(EnumException.class,
+                () -> bookingService
+                        .findAllBookingsForBooker(secondUser.getId(), "TEST", 0, 10));
+
+        assertEquals("Unknown state: TEST", exception.getMessage());
     }
 
     @Test
@@ -397,7 +459,7 @@ class BookingServiceImplTest {
         bookingRepository.save(waitingBookingForItem2);
 
         List<BookingDto> findBookingList = bookingService
-                .findAllBookingsForBooker(secondUser.getId(), "FUTURE", 0, 10);
+                .findAllBookingsForBooker(secondUser.getId(), "WAITING", 0, 10);
 
         assertThat(findBookingList.size()).isEqualTo(2);
 
@@ -641,7 +703,7 @@ class BookingServiceImplTest {
         bookingRepository.save(waitingBookingForItem2);
 
         List<BookingDto> findBookingList = bookingService
-                .findAllBookingsForOwner(secondUser.getId(), "FUTURE", 0, 10);
+                .findAllBookingsForOwner(secondUser.getId(), "WAITING", 0, 10);
 
         assertThat(findBookingList.size()).isEqualTo(2);
 

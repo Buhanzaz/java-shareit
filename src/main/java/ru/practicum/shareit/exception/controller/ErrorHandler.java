@@ -20,12 +20,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleForConflict(final ConflictException exception) {
-        return ErrorResponse.builder().error(exception.getMessage()).build();
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleForBadRequest(final ValidateException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
@@ -34,12 +28,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlerForDataException(final DataTimeException exception) {
-        return ErrorResponse.builder().error(exception.getMessage()).build();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerForDataException(final BadRequestException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 
