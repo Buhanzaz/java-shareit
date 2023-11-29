@@ -50,7 +50,10 @@ class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NotFoundException("Вещи с таким id не найдено"));
         Booking booking = bookingMapper.clientRequestDtoToModel(dto, booker, item, Status.WAITING);
 
-        validationBooking(userId, booking);
+        if (!booking.getItem().getAvailable())
+            throw new ValidateException("Вещь уже забронирована");
+        if (userId.equals(booking.getItem().getUser().getId()))
+            throw new NotFoundException("Нельзя бронировать вещь у самого себя");
 
         return bookingMapper.toDto(bookingRepository.save(booking));
     }
@@ -202,12 +205,5 @@ class BookingServiceImpl implements BookingService {
     private void validationTimeFromDto(ClientRequestBookingDto dto) {
         if (dto.getEnd().isBefore(dto.getStart()) || dto.getStart().equals(dto.getEnd()))
             throw new DataTimeException("Ошибка! Начало бронирования не может быть позже конца бронирования!");
-    }
-
-    private void validationBooking(Long userId, Booking booking) {
-        if (!booking.getItem().getAvailable())
-            throw new ValidateException("Вещь уже забронирована");
-        if (userId.equals(booking.getItem().getUser().getId()))
-            throw new NotFoundException("Нельзя бронировать вещь у самого себя");
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
     final ObjectMapper objectMapper;
     final MockMvc mockMvc;
-
 
     @MockBean
     final UserService userService;
@@ -154,5 +155,20 @@ class UserControllerTest {
         UserDto returnUserDto = objectMapper.readValue(result, UserDto.class);
 
         assertEquals(objectMapper.writeValueAsString(returnUserDto), result);
+    }
+
+    @Test
+    @SneakyThrows
+    public void updateUserNotFound() {
+        when(userService.updateUser(anyLong(), any(UserDto.class)))
+                .thenThrow(NotFoundException.class);
+
+        mockMvc.perform(patch("/users/{userId}", user.getId())
+                        .content(objectMapper.writeValueAsString(userDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpectAll(
+                        status().isNotFound()
+                );
     }
 }

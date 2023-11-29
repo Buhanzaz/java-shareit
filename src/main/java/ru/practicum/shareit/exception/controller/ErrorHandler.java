@@ -33,13 +33,13 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerForDataException(final BookingException exception) {
+    public ErrorResponse handlerForBookingException(final BookingException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerForDataException(final EnumException exception) {
+    public ErrorResponse handlerForEnumException(final EnumException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 

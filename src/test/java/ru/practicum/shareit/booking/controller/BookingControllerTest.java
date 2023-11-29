@@ -17,6 +17,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ClientRequestBookingDto;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.ValidateException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -104,6 +106,22 @@ class BookingControllerTest {
         BookingDto dto = objectMapper.readValue(result, BookingDto.class);
 
         assertEquals(dto, bookingDto);
+    }
+
+    @Test
+    @SneakyThrows
+    void addNewBookingValidateException() {
+        when(bookingService.addNewBooking(anyLong(), any(ClientRequestBookingDto.class)))
+                .thenThrow(ValidateException.class);
+
+        mockMvc.perform(post("/bookings")
+                        .param("X-Sharer-User-Id", "1")
+                        .content(objectMapper.writeValueAsString(clientRequestBookingDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpectAll(
+                        status().isBadRequest()
+                );
     }
 
     @Test
