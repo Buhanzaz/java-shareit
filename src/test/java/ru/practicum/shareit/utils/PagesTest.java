@@ -1,20 +1,13 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.utils;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.shareit.utils.Pages;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class PagesTest {
-
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     void getPageForBooking() {
         Pageable pageForBooking = Pages.getPageForBooking(0, 1);
