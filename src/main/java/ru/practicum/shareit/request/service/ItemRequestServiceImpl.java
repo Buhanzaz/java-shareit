@@ -4,9 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -20,6 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareit.utils.Pages.getPageForItemRequest;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -29,7 +28,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     UserRepository userRepository;
     ItemRequestMapper itemRequestMapper;
 
-    Sort sortBy = Sort.by(Sort.Direction.DESC, "created");
 
     @Override
     public ItemRequestDto addItemRequest(Long creatorId, ItemRequestDto dto) {
@@ -44,10 +42,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> searchAllItemsRequestsCreator(Long creatorId, Integer from, Integer size) {
         validationUser(creatorId);
 
-        Pageable page = PageRequest.of(from, size, sortBy);
-
         List<ItemRequest> itemRequests = itemRequestRepository
-                .searchItemRequestByCreatorId(creatorId, page);
+                .searchItemRequestByCreatorId(creatorId, getPageForItemRequest(from, size));
 
         return itemRequests.stream().map(itemRequestMapper::toDto).collect(Collectors.toList());
     }
@@ -56,9 +52,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> searchAllItemsRequests(Long userId, Integer from, Integer size) {
         validationUser(userId);
 
-        Pageable page = PageRequest.of(from / size, size, sortBy);
-
-        Page<ItemRequest> itemRequestPage = itemRequestRepository.findAll(page);
+        Page<ItemRequest> itemRequestPage = itemRequestRepository.findAll(getPageForItemRequest(from, size));
 
         return itemRequestPage.stream()
                 .filter(itemRequest -> !Objects.equals(itemRequest.getCreator().getId(), userId))
@@ -85,4 +79,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
     }
 
+
 }
+

@@ -3,9 +3,6 @@ package ru.practicum.shareit.booking.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -25,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareit.utils.Pages.getPageForBooking;
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Transactional(readOnly = true)
@@ -35,9 +34,6 @@ class BookingServiceImpl implements BookingService {
     UserRepository userRepository;
     ItemRepository itemRepository;
     BookingMapper bookingMapper;
-
-    Sort bySort = Sort.by(Sort.Direction.DESC, "start");
-
 
     @Override
     @Transactional
@@ -108,36 +104,34 @@ class BookingServiceImpl implements BookingService {
 
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
-            Pageable page = PageRequest.of(from / size, size, bySort);
-
             switch (stateEnum) {
                 case ALL:
-                    return bookingRepository.findByBooker_Id(userId, page)
+                    return bookingRepository.findByBooker_Id(userId, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case CURRENT:
-                    return bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfter(userId, dateTimeNow, dateTimeNow, page)
+                    return bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfter(userId, dateTimeNow, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case PAST:
-                    return bookingRepository.findByBookerIdAndEndIsBefore(userId, dateTimeNow, page)
+                    return bookingRepository.findByBookerIdAndEndIsBefore(userId, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case FUTURE:
-                    return bookingRepository.findByBookerIdAndStartIsAfter(userId, dateTimeNow, page)
+                    return bookingRepository.findByBookerIdAndStartIsAfter(userId, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case WAITING:
-                    return bookingRepository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateTimeNow, Status.WAITING, page)
+                    return bookingRepository.findByBookerIdAndStartIsAfterAndStatusIs(userId, dateTimeNow, Status.WAITING, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case REJECTED:
-                    return bookingRepository.findByBookerIdAndStatusIs(userId, Status.REJECTED, page)
+                    return bookingRepository.findByBookerIdAndStatusIs(userId, Status.REJECTED, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
@@ -159,36 +153,35 @@ class BookingServiceImpl implements BookingService {
             }
 
             LocalDateTime dateTimeNow = LocalDateTime.now();
-            Pageable page = PageRequest.of(from / size, size, bySort);
 
             switch (stateEnum) {
                 case ALL:
-                    return bookingRepository.findByItem_User_Id(userId, page)
+                    return bookingRepository.findByItem_User_Id(userId, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case CURRENT:
-                    return bookingRepository.findByItem_User_IdAndStartIsBeforeAndEndIsAfter(userId, dateTimeNow, dateTimeNow, page)
+                    return bookingRepository.findByItem_User_IdAndStartIsBeforeAndEndIsAfter(userId, dateTimeNow, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case PAST:
-                    return bookingRepository.findByItem_User_IdAndEndIsBefore(userId, dateTimeNow, page)
+                    return bookingRepository.findByItem_User_IdAndEndIsBefore(userId, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case FUTURE:
-                    return bookingRepository.findByItem_User_IdAndStartIsAfter(userId, dateTimeNow, page)
+                    return bookingRepository.findByItem_User_IdAndStartIsAfter(userId, dateTimeNow, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case WAITING:
-                    return bookingRepository.findByItem_User_IdAndStartIsAfterAndStatusIs(userId, dateTimeNow, Status.WAITING, page)
+                    return bookingRepository.findByItem_User_IdAndStartIsAfterAndStatusIs(userId, dateTimeNow, Status.WAITING, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());
                 case REJECTED:
-                    return bookingRepository.findByItem_User_IdAndStatusIs(userId, Status.REJECTED, page)
+                    return bookingRepository.findByItem_User_IdAndStatusIs(userId, Status.REJECTED, getPageForBooking(from, size))
                             .stream()
                             .map(bookingMapper::toDto)
                             .collect(Collectors.toList());

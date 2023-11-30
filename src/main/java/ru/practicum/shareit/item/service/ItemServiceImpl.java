@@ -3,9 +3,6 @@ package ru.practicum.shareit.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.enums.Status;
@@ -34,6 +31,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.practicum.shareit.utils.Pages.getPageForItem;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -49,8 +48,6 @@ class ItemServiceImpl implements ItemService {
     ItemMapper itemMapper;
     CommentMapper commentMapper;
     BookingMapper bookingMapper;
-
-    Sort sortBy = Sort.by(Sort.Direction.ASC, "id");
 
     @Override
     @Transactional
@@ -144,9 +141,8 @@ class ItemServiceImpl implements ItemService {
         if (text.isBlank() || text.isEmpty()) {
             return Collections.emptyList();
         }
-        Pageable page = PageRequest.of(from / size, size, sortBy);
 
-        return itemRepository.searchItem(text, page).stream()
+        return itemRepository.searchItem(text, getPageForItem(from, size)).stream()
                 .map(itemMapper::toDtoItem)
                 .collect(Collectors.toList());
     }
