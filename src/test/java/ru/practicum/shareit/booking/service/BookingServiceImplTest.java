@@ -87,13 +87,12 @@ class BookingServiceImplTest {
     void addNewBooking() {
         User savedUser = userRepository.save(firstUser);
         userRepository.save(secondUser);
-        firstItem.setUser(firstUser);
         itemRepository.save(firstItem);
 
-        NotFoundException exception = assertThrows(NotFoundException.class,
-                () -> bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto));
+        BookingDto savedBooking = bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto);
+        BookingDto findBooking = bookingService.findBookingForAuthorOrOwner(secondUser.getId(), savedBooking.getId());
 
-        assertEquals("Нельзя бронировать вещь у самого себя", exception.getMessage());
+        assertThat(savedBooking).usingRecursiveComparison().ignoringFields("start", "end").isEqualTo(findBooking);
     }
 
     @Test
@@ -113,12 +112,13 @@ class BookingServiceImplTest {
     void addNewBookingNotFoundException() {
         User savedUser = userRepository.save(firstUser);
         userRepository.save(secondUser);
+        firstItem.setUser(firstUser);
         itemRepository.save(firstItem);
 
-        ValidateException exception = assertThrows(ValidateException.class,
+        NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto));
 
-        assertEquals("Вещь уже забронирована", exception.getMessage());
+        assertEquals("Нельзя бронировать вещь у самого себя", exception.getMessage());
     }
 
     @Test
