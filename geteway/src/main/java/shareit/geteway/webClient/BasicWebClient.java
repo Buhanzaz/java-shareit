@@ -5,6 +5,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import shareit.geteway.item.dto.ItemDto;
 
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,12 @@ public class BasicWebClient {
         this.restTemplate = restTemplate;
     }
 
-    protected <T> ResponseEntity<?> post(T t) {
-        return post(null, null, t, null);
+    protected <T> ResponseEntity<?> post(String uri, T t) {
+        return post(uri, null, t, null);
+    }
+
+    protected <T> ResponseEntity<?> post(String uri, T t, Long userId) {
+        return post(uri, null, t, userId);
     }
 
     protected <T> ResponseEntity<?> post(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
@@ -42,15 +47,15 @@ public class BasicWebClient {
     }
 
     protected <T> ResponseEntity<?> get(String uri) {
-        return get(uri, null, null, null);
+        return get(uri, null, null);
     }
 
     protected <T> ResponseEntity<?> get(String uri, Long userId) {
-        return get(uri, null, null, userId);
+        return get(uri, null, userId);
     }
 
-    protected <T> ResponseEntity<?> get(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
-        return generatorRequest(uri, HttpMethod.GET, param, t, userId);
+    protected <T> ResponseEntity<?> get(String uri, @Nullable Map<String, Object> param, Long userId) {
+        return generatorRequest(uri, HttpMethod.GET, param, null, userId);
     }
 
     private <T> ResponseEntity<?> generatorRequest(String uri, HttpMethod method, @Nullable Map<String, Object> param, T t, Long userId) {

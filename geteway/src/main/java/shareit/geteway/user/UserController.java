@@ -13,7 +13,6 @@ import shareit.geteway.validation.UpdateValidationObject;
 
 import javax.validation.constraints.Min;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -26,33 +25,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    UserClient client;
+    UserClient webClient;
     private static final String URI_ID_USER = "/{userId}";
 
     @PostMapping
     public ResponseEntity<?> postRequestUser(@RequestBody @Validated(CreateValidationObject.class) UserDto dto) throws URISyntaxException {
         log.info("Вход в geteway");
-        return client.addUser(dto);
+        return webClient.addUser(dto);
     }
 
     @PatchMapping(path = URI_ID_USER)
     public ResponseEntity<?> updateUser(@PathVariable @Min(1) Long userId,
                                         @RequestBody @Validated(UpdateValidationObject.class) UserDto dto) {
-        return client.updateUser(userId, dto);
+        return webClient.updateUser(userId, dto);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        return client.getAllUsers();
+        return webClient.getAllUsers();
     }
 
     @GetMapping(path = URI_ID_USER)
     public ResponseEntity<?> getUserById(@PathVariable @Min(1) Long userId) {
-        return client.getUserById(userId);
+        return webClient.getUserById(userId);
     }
 
     @DeleteMapping(path = URI_ID_USER)
     public void deleteUser(@PathVariable @Min(1) Long userId) {
-        client.deleteUser(userId);
+        webClient.deleteUser(userId);
     }
 }

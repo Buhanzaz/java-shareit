@@ -3,24 +3,18 @@ package shareit.server.item;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.item.dto.CommentDto;
 import shareit.server.item.dto.ItemDto;
 import shareit.server.item.service.ItemService;
-import shareit.server.validation.validationInterface.CreateValidationObject;
-import shareit.server.validation.validationInterface.UpdateValidationObject;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
-@Validated
+
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -34,8 +28,8 @@ public class ItemController {
 
 
     @PostMapping
-    public ResponseEntity<ItemDto> postRequestItem(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                   @RequestBody @Validated(CreateValidationObject.class) ItemDto dto) {
+    public ResponseEntity<ItemDto> postRequestItem(@RequestHeader(HEADER_ID_USER) Long userId,
+                                                   @RequestBody ItemDto dto) {
 
         ItemDto itemDto = itemService.addItem(userId, dto);
 
@@ -43,9 +37,9 @@ public class ItemController {
     }
 
     @PatchMapping(URI_ID_ITEM)
-    public ResponseEntity<ItemDto> patchRequestItem(@PathVariable @Min(1) Long itemId,
-                                                    @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                    @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
+    public ResponseEntity<ItemDto> patchRequestItem(@PathVariable Long itemId,
+                                                    @RequestHeader(HEADER_ID_USER) Long userId,
+                                                    @RequestBody ItemDto dto) {
 
         ItemDto itemDto = itemService.updateItem(itemId, userId, dto);
 
@@ -53,8 +47,8 @@ public class ItemController {
     }
 
     @GetMapping(URI_ID_ITEM)
-    public ResponseEntity<ItemDto> getRequestItem(@PathVariable @Min(1) Long itemId,
-                                                  @RequestHeader(HEADER_ID_USER) @Min(1) Long userId) {
+    public ResponseEntity<ItemDto> getRequestItem(@PathVariable Long itemId,
+                                                  @RequestHeader(HEADER_ID_USER) Long userId) {
 
         ItemDto itemDto = itemService.getItemById(itemId, userId);
 
@@ -62,7 +56,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId) {
+    public ResponseEntity<List<ItemDto>> getRequestItemsOwner(@RequestHeader(HEADER_ID_USER) Long userId) {
 
         List<ItemDto> itemDto = itemService.getAllItemsOwner(userId);
 
@@ -72,9 +66,8 @@ public class ItemController {
     @GetMapping(URI_SEARCH)
     public ResponseEntity<List<ItemDto>> getRequestItemSearch(
             @RequestParam(name = "text") String itemName,
-            @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-            @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(defaultValue = "10") @Range(min = 1, max = 20) Integer size) {
+            @RequestHeader(HEADER_ID_USER) Long userId,
+            Integer from, Integer size) {
 
         List<ItemDto> itemDto = itemService.itemSearch(itemName, userId, from, size);
 
@@ -82,9 +75,9 @@ public class ItemController {
     }
 
     @PostMapping(URI_ADD_COMMENT)
-    public ResponseEntity<CommentDto> postRequestAddComment(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                            @PathVariable @Min(1) Long itemId,
-                                                            @RequestBody @Validated CommentDto dto) {
+    public ResponseEntity<CommentDto> postRequestAddComment(@RequestHeader(HEADER_ID_USER) Long userId,
+                                                            @PathVariable Long itemId,
+                                                            @RequestBody CommentDto dto) {
 
         CommentDto commentDto = itemService.addComment(userId, itemId, dto);
 

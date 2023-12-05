@@ -16,7 +16,6 @@ import java.util.List;
  * TODO Sprint add-controllers.
  */
 @Slf4j
-@Validated
 @RestController
 @RequestMapping(path = "/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

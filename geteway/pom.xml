@@ -8,11 +8,11 @@
         <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>shareit.geteway</groupId>
-    <artifactId>shareit-geteway</artifactId>
+    <groupId>shareIt.geteway</groupId>
+    <artifactId>geteway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>shareit-geteway</name>
-    <description>shareit-geteway</description>
+    <name>geteway</name>
+
     <properties>
         <java.version>11</java.version>
     </properties>
