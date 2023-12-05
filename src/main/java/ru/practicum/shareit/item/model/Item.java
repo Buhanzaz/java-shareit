@@ -1,9 +1,8 @@
 package ru.practicum.shareit.item.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -11,9 +10,13 @@ import javax.persistence.*;
 /**
  * TODO Sprint add-controllers.
  */
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "items")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "items", schema = "public")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     @Id
@@ -34,8 +37,7 @@ public class Item {
     @JoinColumn(name = "owner_id")
     User user; //Владелец вещи owner_id == userId.
 
-    @JsonIgnore
-    @Column(name = "request")
-    Boolean isRequest; //True - вещь создана другим пользователем, False - владельцем вещи.
-
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    ItemRequest itemRequest;
 }

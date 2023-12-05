@@ -19,6 +19,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -28,6 +30,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.utils.Pages.getPageForItem;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,7 @@ class ItemServiceImpl implements ItemService {
     UserRepository userRepository;
     BookingRepository bookingRepository;
     CommentRepository commentRepository;
+    ItemRequestRepository itemRequestRepository;
 
     ItemMapper itemMapper;
     CommentMapper commentMapper;
@@ -47,9 +52,24 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto addItem(Long userId, ItemDto dto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Юзер с id " + userId + " не найден"));
-        dto.setUser(user);
-        return itemMapper.toDtoItem(itemRepository.save(itemMapper.toModelItem(dto)));
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Юзер с id " + userId + " не найден")
+        );
+
+        Item modelItem = itemMapper.toModelItem(dto);
+
+        if (dto.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(dto.getRequestId()).orElseThrow(
+                    () -> new NotFoundException(String.format("Запроса на создание вещи с id %d не найдено",
+                            dto.getRequestId()))
+            );
+
+            modelItem.setItemRequest(itemRequest);
+        }
+
+        modelItem.setUser(user);
+
+        return itemMapper.toDtoItem(itemRepository.save(modelItem));
     }
 
     @Override
@@ -65,11 +85,13 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDto getItemById(Long itemId, Long userId) {
+        //TODO Подумать над новой реализацией
+        /*Первая причина видится в использовании кучи запросов что можно изменить, так же думаю что и памяти тратится оч много*/
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
         ItemDto itemDto = itemMapper.toDtoItem(item);
 
-        if (item.getUser().getId() == userId) {
+        if (Objects.equals(item.getUser().getId(), userId)) {
             List<Booking> bookings = bookingRepository.findByItem_IdAndStatusNotIn(
                     itemId, List.of(Status.REJECTED, Status.CANCELED));
 
@@ -87,6 +109,8 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<ItemDto> getAllItemsOwner(Long userId) {
+        //TODO Подумать над новой реализацией
+        /*Первая причина видится в использовании кучи запросов что можно изменить, так же думаю что и памяти тратится оч много*/
         List<Item> items = itemRepository.findAllItemByUser(userId);
         List<Booking> bookings = bookingRepository.findByItem_UserId(userId);
         List<ItemDto> itemsDto = items.stream().map(itemMapper::toDtoItem).collect(Collectors.toList());
@@ -113,11 +137,12 @@ class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> itemSearch(String text, Long userId) {
+    public List<ItemDto> itemSearch(String text, Long userId, Integer from, Integer size) {
         if (text.isBlank() || text.isEmpty()) {
             return Collections.emptyList();
         }
-        return itemRepository.searchItem(text).stream()
+
+        return itemRepository.searchItem(text, getPageForItem(from, size)).stream()
                 .map(itemMapper::toDtoItem)
                 .collect(Collectors.toList());
     }
@@ -125,7 +150,7 @@ class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentDto addComment(Long userId, Long itemId, CommentDto dto) throws RuntimeException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегестрированы."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы."));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещи с id : %d не существует.", itemId)));
         List<Booking> bookings = bookingRepository.findByItem_IdAndBooker_IdAndStatusAndEndBefore(

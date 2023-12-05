@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", schema = "public")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

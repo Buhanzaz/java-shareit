@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,39 +24,37 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<Booking> findBookingByIdAndItem_User_Id(Long bookingId, Long userId);
 
-    List<Booking> findByBookerIdOrderByStartDesc(Long bookingId);
+    List<Booking> findByBooker_Id(Long bookerId, Pageable page);
 
-    List<Booking> findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(Long bookingId,
-                                                                              LocalDateTime end,
-                                                                              LocalDateTime start);
+    List<Booking> findByBookerIdAndStartIsBeforeAndEndIsAfter(Long bookingId,
+                                                              LocalDateTime end,
+                                                              LocalDateTime start, Pageable page);
 
-    List<Booking> findByBookerIdAndEndIsBeforeOrderByStartDesc(Long bookingId, LocalDateTime time);
+    List<Booking> findByBookerIdAndEndIsBefore(Long bookingId, LocalDateTime time, Pageable page);
 
-    List<Booking> findByBookerIdAndStartIsAfterOrderByStartDesc(Long bookingId, LocalDateTime time);
+    List<Booking> findByBookerIdAndStartIsAfter(Long bookingId, LocalDateTime time, Pageable page);
 
-    List<Booking> findByBookerIdAndStartIsAfterAndStatusIsOrderByStartDesc(Long bookerId,
-                                                                           LocalDateTime start,
-                                                                           Status status);
+    List<Booking> findByBookerIdAndStartIsAfterAndStatusIs(Long bookerId,
+                                                           LocalDateTime start,
+                                                           Status status, Pageable page);
 
-    List<Booking> findByBookerIdAndStatusIsOrderByStartDesc(Long bookingId, Status status);
+    List<Booking> findByBookerIdAndStatusIs(Long bookingId, Status status, Pageable page);
 
-    List<Booking> findByItem_User_IdOrderByStartDesc(Long userId);
+    List<Booking> findByItem_User_Id(Long userId, Pageable page);
 
-    List<Booking> findByItem_User_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(Long userId,
-                                                                                  LocalDateTime start,
-                                                                                  LocalDateTime end);
+    List<Booking> findByItem_User_IdAndStartIsBeforeAndEndIsAfter(Long userId,
+                                                                  LocalDateTime start,
+                                                                  LocalDateTime end, Pageable page);
 
-    List<Booking> findByItem_User_IdAndEndIsBeforeOrderByStartDesc(Long userId, LocalDateTime end);
+    List<Booking> findByItem_User_IdAndEndIsBefore(Long userId, LocalDateTime end, Pageable page);
 
-    List<Booking> findByItem_User_IdAndStartIsAfterOrderByStartDesc(Long userId, LocalDateTime start);
+    List<Booking> findByItem_User_IdAndStartIsAfter(Long userId, LocalDateTime start, Pageable page);
 
-    List<Booking> findByItem_User_IdAndStartIsAfterAndStatusIsOrderByStartDesc(Long userId,
-                                                                               LocalDateTime start,
-                                                                               Status status);
+    List<Booking> findByItem_User_IdAndStartIsAfterAndStatusIs(Long userId,
+                                                               LocalDateTime start,
+                                                               Status status, Pageable page);
 
-    List<Booking> findByItem_User_IdAndStatusIsOrderByStartDesc(Long userId, Status status);
-
-    List<Booking> findBookingsByItem_Id(Long itemId);
+    List<Booking> findByItem_User_IdAndStatusIs(Long userId, Status status, Pageable page);
 
     List<Booking> findByItem_IdAndStatusNotIn(Long itemId, Collection<Status> status);
 

@@ -11,11 +11,13 @@ import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.validation.validationInterface.CreateValidationObject;
 import ru.practicum.shareit.validation.validationInterface.UpdateValidationObject;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
+@Validated
 @RestController
 @RequestMapping(path = "/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -39,18 +41,18 @@ public class UserController {
     }
 
     @DeleteMapping(path = URI_ID_USER)
-    public void deleteRequestUser(@PathVariable Long userId) {
+    public void deleteRequestUser(@PathVariable @Min(1) Long userId) {
         userService.deleteUserById(userId);
     }
 
     @PatchMapping(path = URI_ID_USER)
-    public ResponseEntity<UserDto> patchRequestUser(@PathVariable Long userId, @RequestBody @Validated(UpdateValidationObject.class) UserDto dto) {
+    public ResponseEntity<UserDto> patchRequestUser(@PathVariable @Min(1) Long userId, @RequestBody @Validated(UpdateValidationObject.class) UserDto dto) {
         UserDto userDto = userService.updateUser(userId, dto);
         return ResponseEntity.ok(userDto);
     }
 
     @GetMapping(path = URI_ID_USER)
-    public ResponseEntity<UserDto> getRequestUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDto> getRequestUser(@PathVariable @Min(1) Long userId) {
         UserDto userDto = userService.getUserById(userId);
         return ResponseEntity.ok(userDto);
     }
