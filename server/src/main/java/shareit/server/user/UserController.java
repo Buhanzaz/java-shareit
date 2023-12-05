@@ -9,10 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.user.dto.UserDto;
 import shareit.server.user.service.UserService;
-import shareit.server.validation.validationInterface.CreateValidationObject;
-import shareit.server.validation.validationInterface.UpdateValidationObject;
 
-import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
@@ -38,24 +35,24 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> postRequestUser(@RequestBody @Validated(CreateValidationObject.class) UserDto dto) {
+    public ResponseEntity<UserDto> postRequestUser(@RequestBody UserDto dto) {
         UserDto userDto = userService.addUser(dto);
         return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping(path = URI_ID_USER)
-    public void deleteRequestUser(@PathVariable @Min(1) Long userId) {
+    public void deleteRequestUser(@PathVariable Long userId) {
         userService.deleteUserById(userId);
     }
 
     @PatchMapping(path = URI_ID_USER)
-    public ResponseEntity<UserDto> patchRequestUser(@PathVariable @Min(1) Long userId, @RequestBody @Validated(UpdateValidationObject.class) UserDto dto) {
+    public ResponseEntity<UserDto> patchRequestUser(@PathVariable Long userId, @RequestBody UserDto dto) {
         UserDto userDto = userService.updateUser(userId, dto);
         return ResponseEntity.ok(userDto);
     }
 
     @GetMapping(path = URI_ID_USER)
-    public ResponseEntity<UserDto> getRequestUser(@PathVariable @Min(1) Long userId) {
+    public ResponseEntity<UserDto> getRequestUser(@PathVariable Long userId) {
         UserDto userDto = userService.getUserById(userId);
         return ResponseEntity.ok(userDto);
     }

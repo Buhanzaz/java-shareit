@@ -2,25 +2,12 @@ package shareit.server.user.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import shareit.server.validation.validationInterface.CreateValidationObject;
-import shareit.server.validation.validationInterface.UpdateValidationObject;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-@Setter
-@Getter
+@Data
 @Builder
-@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     Long id;
-
-    @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
     String name;
-
-    @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
-    @Email(groups = {CreateValidationObject.class, UpdateValidationObject.class}, message = "Поле должно содержать email")
     String email;
 }
