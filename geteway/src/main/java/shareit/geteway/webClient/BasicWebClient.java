@@ -2,10 +2,8 @@ package shareit.geteway.webClient;
 
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import shareit.geteway.item.dto.ItemDto;
 
 import java.util.List;
 import java.util.Map;
@@ -18,55 +16,47 @@ public class BasicWebClient {
         this.restTemplate = restTemplate;
     }
 
-    protected <T> ResponseEntity<?> post(String uri, T t) {
-        return post(uri, null, t, null);
+    protected <T> ResponseEntity<?> post(T t) {
+        return post("", t, null);
+    }
+
+    protected <T> ResponseEntity<?> post(T t, Long userId) {
+        return post("", t, userId);
     }
 
     protected <T> ResponseEntity<?> post(String uri, T t, Long userId) {
-        return post(uri, null, t, userId);
+        return generatorRequest(uri, HttpMethod.POST, null, t, userId);
     }
 
-    protected <T> ResponseEntity<?> post(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
-        return generatorRequest(uri, HttpMethod.POST, param, t, userId);
-    }
-    protected <T> ResponseEntity<?> update(String uri, Long userId) {
-        return update(uri, null, null, userId);
+    protected ResponseEntity<?> update(String uri, Long userId) {
+        return update(uri, null, userId);
     }
 
-    protected <T> ResponseEntity<?> update(String uri, Long userId, Map<String, Object> param) {
-        return update(uri, param, null, userId);
-    }
-    protected <T> ResponseEntity<?> update(String uri, Long userId, T t) {
-        return update(uri, null, t, userId);
+    protected <T> ResponseEntity<?> update(String uri, T t, Long userId) {
+        return generatorRequest(uri, HttpMethod.PATCH, null, t, userId);
     }
 
-    protected <T> ResponseEntity<?> update(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
-        return generatorRequest(uri, HttpMethod.PATCH, param, t, userId);
+    protected void delete(String uri, Long userId) {
+        generatorRequest(uri, HttpMethod.DELETE, null, null, userId);
     }
 
-    protected <T> void delete(String uri, Long userId) {
-        delete(uri, null, null, userId);
-    }
-
-    protected <T> void delete(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
-        generatorRequest(uri, HttpMethod.DELETE, param, t, userId);
-    }
-
-    protected <T> ResponseEntity<?> get(String uri) {
+    protected ResponseEntity<?> get(String uri) {
         return get(uri, null, null);
     }
 
-    protected <T> ResponseEntity<?> get(String uri, Long userId) {
+    protected ResponseEntity<?> get(String uri, Long userId) {
         return get(uri, null, userId);
     }
 
-    protected <T> ResponseEntity<?> get(String uri, @Nullable Map<String, Object> param, Long userId) {
+    protected ResponseEntity<?> get(String uri, @Nullable Map<String, Object> param, Long userId) {
         return generatorRequest(uri, HttpMethod.GET, param, null, userId);
     }
 
     private <T> ResponseEntity<?> generatorRequest(String uri, HttpMethod method, @Nullable Map<String, Object> param, T t, Long userId) {
         HttpEntity<T> httpEntity = new HttpEntity<>(t, defaultHeaders(userId));
+
         ResponseEntity<?> exchange;
+
         try {
             if (param != null) {
                 exchange = restTemplate.exchange(uri, method, httpEntity, Object.class, param);
