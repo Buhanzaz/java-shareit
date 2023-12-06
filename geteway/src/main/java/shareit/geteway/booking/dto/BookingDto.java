@@ -2,9 +2,9 @@ package shareit.geteway.booking.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import shareit.server.booking.enums.Status;
-import shareit.server.item.dto.ItemDto;
-import shareit.server.user.dto.UserDto;
+import shareit.geteway.booking.enums.Status;
+import shareit.geteway.item.dto.ItemDto;
+import shareit.geteway.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 

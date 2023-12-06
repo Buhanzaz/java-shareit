@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import shareit.server.item.dto.ItemDto;
 import shareit.server.user.dto.UserDto;
-import shareit.server.validation.validationInterface.CreateValidationObject;
+import shareit.server.validation.interfaces.CreateValidationObject;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

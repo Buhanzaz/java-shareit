@@ -11,13 +11,9 @@ import java.time.LocalDateTime;
 /**
  * TODO Sprint add-bookings.
  */
-@Setter
-@Getter
+@Data
 @Builder
-@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
-@NoArgsConstructor
 public class BookingDto {
     Long id;
     LocalDateTime start;

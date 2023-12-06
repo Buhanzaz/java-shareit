@@ -2,13 +2,9 @@ package shareit.server.item.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.validator.constraints.Length;
 import shareit.server.booking.dto.BookingWithoutItemDto;
 import shareit.server.user.model.User;
-import shareit.server.validation.validationInterface.CreateValidationObject;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

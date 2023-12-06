@@ -1,4 +1,4 @@
-package shareit.geteway.user;
+package shareit.geteway.user.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

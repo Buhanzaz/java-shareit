@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.request.dto.ItemRequestDto;
 import shareit.server.request.service.ItemRequestService;
-import shareit.server.validation.validationInterface.CreateValidationObject;
+import shareit.server.validation.interfaces.CreateValidationObject;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;

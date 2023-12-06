@@ -5,11 +5,9 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
 @Builder
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingWithoutItemDto {
     Long id;
     Long bookerId;

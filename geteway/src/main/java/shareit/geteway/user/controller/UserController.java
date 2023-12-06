@@ -1,4 +1,4 @@
-package shareit.geteway.user;
+package shareit.geteway.user.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shareit.geteway.user.client.UserClient;
 import shareit.geteway.user.dto.UserDto;
 import shareit.geteway.validation.CreateValidationObject;
 import shareit.geteway.validation.UpdateValidationObject;

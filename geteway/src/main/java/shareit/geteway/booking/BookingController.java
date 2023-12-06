@@ -7,13 +7,13 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import shareit.server.booking.dto.BookingDto;
-import shareit.server.booking.dto.ClientRequestBookingDto;
-import shareit.server.booking.service.BookingService;
+import shareit.geteway.booking.dto.BookingDto;
+import shareit.geteway.booking.dto.ClientRequestBookingDto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+
 
 /**
  * TODO Sprint add-bookings.
@@ -25,51 +25,51 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingController {
 
-    BookingService bookingService;
+    BookingClient webClient;
     private static final String URI_PATH_BOOKING_ID = "/{bookingId}";
     private static final String URI_PATH_BOOKINGS_FOR_OWNER = "/owner";
     private static final String HEADER_ID_USER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ResponseEntity<BookingDto> addNewBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
+    public ResponseEntity<?> addNewBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
                                                     @RequestBody @Validated ClientRequestBookingDto dto) {
 
-        return ResponseEntity.ok(bookingService.addNewBooking(userId, dto));
+        return webClient.addNewBooking(userId, dto);
     }
 
     @PatchMapping(URI_PATH_BOOKING_ID)
-    public ResponseEntity<BookingDto> ownerResponseToTheBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
+    public ResponseEntity<?> ownerResponseToTheBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
                                                                 @RequestParam Boolean approved,
                                                                 @PathVariable @Min(1) Long bookingId) {
 
-        return ResponseEntity.ok(bookingService.ownerResponseToTheBooking(userId, approved, bookingId));
+        return webClient.ownerResponseToTheBooking(userId, approved, bookingId);
     }
 
     @GetMapping(URI_PATH_BOOKING_ID)
-    public ResponseEntity<BookingDto> findBookingByItemIdForAuthorBookingOrOwnerItem(
+    public ResponseEntity<?> findBookingByItemIdForAuthorBookingOrOwnerItem(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
             @PathVariable @Min(1) Long bookingId) {
 
-        return ResponseEntity.ok(bookingService.findBookingForAuthorOrOwner(userId, bookingId));
+        return webClient.findBookingForAuthorOrOwner(userId, bookingId);
     }
 
     @GetMapping()
-    public ResponseEntity<List<BookingDto>> findAllBookingsForUser(
+    public ResponseEntity<?> findAllBookingsForUser(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
             @RequestParam(defaultValue = "ALL") String state,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "20", required = false) @Range(min = 1, max = 20) Integer size) {
 
-        return ResponseEntity.ok(bookingService.findAllBookingsForBooker(userId, state, from, size));
+        return webClient.findAllBookingsForBooker(userId, state, from, size);
     }
 
     @GetMapping(URI_PATH_BOOKINGS_FOR_OWNER)
-    public ResponseEntity<List<BookingDto>> getAllBookingsForOwner(
+    public ResponseEntity<?> getAllBookingsForOwner(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
             @RequestParam(defaultValue = "ALL") String state,
             @RequestParam(defaultValue = "0", required = false) @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "20", required = false) @Range(min = 1, max = 20) Integer size) {
 
-        return ResponseEntity.ok(bookingService.findAllBookingsForOwner(userId, state, from, size));
+        return webClient.findAllBookingsForOwner(userId, state, from, size);
     }
 }

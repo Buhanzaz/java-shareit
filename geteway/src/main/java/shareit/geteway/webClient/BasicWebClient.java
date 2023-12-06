@@ -29,7 +29,13 @@ public class BasicWebClient {
     protected <T> ResponseEntity<?> post(String uri, @Nullable Map<String, Object> param, T t, Long userId) {
         return generatorRequest(uri, HttpMethod.POST, param, t, userId);
     }
+    protected <T> ResponseEntity<?> update(String uri, Long userId) {
+        return update(uri, null, null, userId);
+    }
 
+    protected <T> ResponseEntity<?> update(String uri, Long userId, Map<String, Object> param) {
+        return update(uri, param, null, userId);
+    }
     protected <T> ResponseEntity<?> update(String uri, Long userId, T t) {
         return update(uri, null, t, userId);
     }
