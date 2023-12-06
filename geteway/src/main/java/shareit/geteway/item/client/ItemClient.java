@@ -15,6 +15,7 @@ import java.util.Map;
 @Component
 public class ItemClient extends BasicWebClient {
     private static final String API_ITEM_LOCATION = "/items";
+
     public ItemClient(@Value("${api.shareIt.server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_ITEM_LOCATION))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
@@ -47,6 +48,6 @@ public class ItemClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> addComment(Long userId, Long itemId, CommentDto dto) {
-        return post(String.format("/comment/%d", itemId), dto, userId);
+        return post(String.format("/%d/comment",itemId), dto, userId);
     }
 }

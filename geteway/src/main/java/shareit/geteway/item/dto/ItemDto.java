@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.apache.catalina.User;
 import org.hibernate.validator.constraints.Length;
 import shareit.geteway.validation.CreateValidationObject;
+import shareit.server.booking.dto.BookingWithoutItemDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
