@@ -11,9 +11,6 @@ import shareit.server.booking.service.BookingService;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor

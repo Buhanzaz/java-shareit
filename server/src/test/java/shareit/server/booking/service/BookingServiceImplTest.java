@@ -122,20 +122,6 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void addNewBookingDataTimeException() {
-        User savedUser = userRepository.save(firstUser);
-        userRepository.save(secondUser);
-        itemRepository.save(firstItem);
-
-        clientRequestBookingDto.setEnd(LocalDateTime.now().minusDays(3));
-
-        DataTimeException exception = assertThrows(DataTimeException.class,
-                () -> bookingService.addNewBooking(savedUser.getId(), clientRequestBookingDto));
-
-        assertEquals("Ошибка! Начало бронирования не может быть позже конца бронирования!", exception.getMessage());
-    }
-
-    @Test
     void addNewBookingNotFoundExceptionUser() {
         firstUser.setId(1L);
 
@@ -278,42 +264,6 @@ class BookingServiceImplTest {
 
         assertEquals(bookingId.get(0), currentBookingForItem2.getId());
         assertEquals(bookingId.get(1), currentBookingForItem1.getId());
-    }
-
-    @Test
-    @SneakyThrows
-    void findAllBookingsForBooker_all_isEnumError() {
-        userRepository.save(firstUser);
-        userRepository.save(secondUser);
-        itemRepository.save(firstItem);
-        itemRepository.save(secondItem);
-
-        Booking currentBookingForItem1 = Booking.builder()
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
-                .item(firstItem)
-                .booker(secondUser)
-                .status(Status.APPROVED)
-                .build();
-
-        Thread.sleep(25);
-
-        Booking currentBookingForItem2 = Booking.builder()
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
-                .item(secondItem)
-                .booker(secondUser)
-                .status(Status.APPROVED)
-                .build();
-
-        bookingRepository.save(currentBookingForItem1);
-        bookingRepository.save(currentBookingForItem2);
-
-        EnumException exception = assertThrows(EnumException.class,
-                () -> bookingService
-                        .findAllBookingsForBooker(secondUser.getId(), "TEST", 0, 10));
-
-        assertEquals("Unknown state: TEST", exception.getMessage());
     }
 
     @Test
@@ -594,42 +544,6 @@ class BookingServiceImplTest {
 
         assertEquals(bookingId.get(0), currentBookingForItem2.getId());
         assertEquals(bookingId.get(1), currentBookingForItem1.getId());
-    }
-
-    @Test
-    @SneakyThrows
-    void findAllBookingsForOwner_all_isEnumError() {
-        userRepository.save(firstUser);
-        userRepository.save(secondUser);
-        itemRepository.save(firstItem);
-        itemRepository.save(secondItem);
-
-        Booking currentBookingForItem1 = Booking.builder()
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
-                .item(firstItem)
-                .booker(secondUser)
-                .status(Status.APPROVED)
-                .build();
-
-        Thread.sleep(25);
-
-        Booking currentBookingForItem2 = Booking.builder()
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(1))
-                .item(secondItem)
-                .booker(secondUser)
-                .status(Status.APPROVED)
-                .build();
-
-        bookingRepository.save(currentBookingForItem1);
-        bookingRepository.save(currentBookingForItem2);
-
-        EnumException exception = assertThrows(EnumException.class,
-                () -> bookingService
-                        .findAllBookingsForOwner(secondUser.getId(), "TEST", 0, 10));
-
-        assertEquals("Unknown state: TEST", exception.getMessage());
     }
 
     @Test

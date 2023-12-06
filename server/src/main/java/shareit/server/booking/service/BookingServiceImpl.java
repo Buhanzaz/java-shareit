@@ -12,7 +12,9 @@ import shareit.server.booking.enums.Status;
 import shareit.server.booking.mapper.BookingMapper;
 import shareit.server.booking.model.Booking;
 import shareit.server.booking.repository.BookingRepository;
-import shareit.server.exception.*;
+import shareit.server.exception.BookingException;
+import shareit.server.exception.NotFoundException;
+import shareit.server.exception.ValidateException;
 import shareit.server.item.model.Item;
 import shareit.server.item.repository.ItemRepository;
 import shareit.server.user.model.User;
@@ -25,7 +27,6 @@ import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 class BookingServiceImpl implements BookingService {
 
@@ -37,8 +38,6 @@ class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto addNewBooking(Long userId, ClientRequestBookingDto dto) {
-        validationTimeFromDto(dto);
-
         User booker = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы!"));
         Item item = itemRepository.findByIdFetchEgle(dto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещи с таким id не найдено"));
@@ -92,14 +91,9 @@ class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingDto> findAllBookingsForBooker(Long userId, String state, Integer from, Integer size) {
-        State stateEnum;
+        State stateEnum = State.valueOf(state);
 
         if (userRepository.existsById(userId)) {
-            try {
-                stateEnum = State.valueOf(state);
-            } catch (IllegalArgumentException e) {
-                throw new EnumException(String.format("Unknown state: %s", state));
-            }
 
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
@@ -142,14 +136,9 @@ class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingDto> findAllBookingsForOwner(Long userId, String state, Integer from, Integer size) {
-        State stateEnum;
+        State stateEnum = State.valueOf(state);
 
         if (userRepository.existsById(userId)) {
-            try {
-                stateEnum = State.valueOf(state);
-            } catch (IllegalArgumentException e) {
-                throw new EnumException(String.format("Unknown state: %s", state));
-            }
 
             LocalDateTime dateTimeNow = LocalDateTime.now();
 
@@ -187,10 +176,5 @@ class BookingServiceImpl implements BookingService {
             }
         }
         throw new NotFoundException("Вы не зарегистрированы");
-    }
-
-    private void validationTimeFromDto(ClientRequestBookingDto dto) {
-        if (dto.getEnd().isBefore(dto.getStart()) || dto.getStart().equals(dto.getEnd()))
-            throw new DataTimeException("Ошибка! Начало бронирования не может быть позже конца бронирования!");
     }
 }

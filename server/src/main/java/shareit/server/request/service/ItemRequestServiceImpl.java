@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shareit.server.exception.NotFoundException;
 import shareit.server.request.dto.ItemRequestDto;
 import shareit.server.request.mapper.ItemRequestMapper;
@@ -30,6 +31,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
 
     @Override
+    @Transactional
     public ItemRequestDto addItemRequest(Long creatorId, ItemRequestDto dto) {
         User creator = userRepository.findById(creatorId).orElseThrow(() -> new NotFoundException("Вы не зарегистрированы!"));
 
@@ -39,6 +41,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemRequestDto> searchAllItemsRequestsCreator(Long creatorId, Integer from, Integer size) {
         validationUser(creatorId);
 
@@ -49,6 +52,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemRequestDto> searchAllItemsRequests(Long userId, Integer from, Integer size) {
         validationUser(userId);
 
@@ -61,6 +65,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ItemRequestDto searchAllItemsRequestsById(Long userId, Long requestId) {
         validationUser(userId);
         ItemRequest itemRequest = itemRequestRepository
@@ -72,13 +77,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return itemRequestMapper.toDto(itemRequest);
     }
 
-
     private void validationUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Вы не зарегистрированы!");
         }
     }
-
-
 }
 

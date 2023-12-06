@@ -1,15 +1,14 @@
 package shareit.server.item.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import shareit.server.booking.dto.BookingWithoutItemDto;
 import shareit.server.user.model.User;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
