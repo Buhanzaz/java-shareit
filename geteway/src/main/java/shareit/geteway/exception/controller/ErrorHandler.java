@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpStatusCodeException;
+import shareit.geteway.exception.DataTimeException;
+import shareit.geteway.exception.EnumException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -22,6 +24,18 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlerForViolationException(HttpStatusCodeException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForEnumException(final EnumException exception) {
+        return ErrorResponse.builder().error(exception.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerForDataException(final DataTimeException exception) {
         return ErrorResponse.builder().error(exception.getMessage()).build();
     }
 
