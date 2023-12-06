@@ -34,20 +34,20 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<?> postRequestItem(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                   @RequestBody @Validated(CreateValidationObject.class) ItemDto dto) {
+                                             @RequestBody @Validated(CreateValidationObject.class) ItemDto dto) {
         return webClient.addItem(userId, dto);
     }
 
     @PatchMapping(URI_ID_ITEM)
     public ResponseEntity<?> patchRequestItem(@PathVariable @Min(1) Long itemId,
-                                                    @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                    @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
+                                              @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
+                                              @RequestBody @Validated(UpdateValidationObject.class) ItemDto dto) {
         return webClient.updateItem(itemId, userId, dto);
     }
 
     @GetMapping(URI_ID_ITEM)
     public ResponseEntity<?> getRequestItem(@PathVariable @Min(1) Long itemId,
-                                                  @RequestHeader(HEADER_ID_USER) @Min(1) Long userId) {
+                                            @RequestHeader(HEADER_ID_USER) @Min(1) Long userId) {
         return webClient.getItemById(itemId, userId);
     }
 
@@ -67,8 +67,8 @@ public class ItemController {
 
     @PostMapping(URI_ADD_COMMENT)
     public ResponseEntity<?> postRequestAddComment(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                            @PathVariable @Min(1) Long itemId,
-                                                            @RequestBody @Validated CommentDto dto) {
+                                                   @PathVariable @Min(1) Long itemId,
+                                                   @RequestBody @Validated CommentDto dto) {
 
         return webClient.addComment(userId, itemId, dto);
     }

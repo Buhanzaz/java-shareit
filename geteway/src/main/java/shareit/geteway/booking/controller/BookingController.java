@@ -1,4 +1,4 @@
-package shareit.geteway.booking;
+package shareit.geteway.booking.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +7,11 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import shareit.geteway.booking.dto.BookingDto;
+import shareit.geteway.booking.client.BookingClient;
 import shareit.geteway.booking.dto.ClientRequestBookingDto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 
 /**
@@ -32,15 +31,15 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<?> addNewBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                    @RequestBody @Validated ClientRequestBookingDto dto) {
+                                           @RequestBody @Validated ClientRequestBookingDto dto) {
 
         return webClient.addNewBooking(userId, dto);
     }
 
     @PatchMapping(URI_PATH_BOOKING_ID)
     public ResponseEntity<?> ownerResponseToTheBooking(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
-                                                                @RequestParam Boolean approved,
-                                                                @PathVariable @Min(1) Long bookingId) {
+                                                       @RequestParam Boolean approved,
+                                                       @PathVariable @Min(1) Long bookingId) {
 
         return webClient.ownerResponseToTheBooking(userId, approved, bookingId);
     }

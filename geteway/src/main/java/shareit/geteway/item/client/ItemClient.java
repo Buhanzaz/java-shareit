@@ -22,11 +22,11 @@ public class ItemClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> addItem(Long userId, ItemDto dto) {
-        return post("", dto, userId);
+        return post(dto, userId);
     }
 
     public ResponseEntity<?> updateItem(Long itemId, Long userId, ItemDto dto) {
-        return update(String.format("/%d", itemId), userId, dto);
+        return update(String.format("/%d", itemId), dto, userId);
     }
 
     public ResponseEntity<?> getItemById(Long itemId, Long userId) {
@@ -48,6 +48,6 @@ public class ItemClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> addComment(Long userId, Long itemId, CommentDto dto) {
-        return post(String.format("/%d/comment",itemId), dto, userId);
+        return post(String.format("/%d/comment", itemId), dto, userId);
     }
 }

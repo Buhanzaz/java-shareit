@@ -4,8 +4,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.apache.catalina.User;
 import org.hibernate.validator.constraints.Length;
+import shareit.geteway.booking.dto.BookingWithoutItemDto;
 import shareit.geteway.validation.CreateValidationObject;
-import shareit.server.booking.dto.BookingWithoutItemDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,10 +14,8 @@ import java.util.List;
 /**
  * TODO Sprint add-controllers.
  */
-@Setter
-@Getter
+@Data
 @Builder
-@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     Long id; //Id вещи.

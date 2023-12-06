@@ -1,4 +1,4 @@
-package shareit.geteway.booking;
+package shareit.geteway.booking.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,8 +7,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import shareit.geteway.booking.dto.ClientRequestBookingDto;
+import shareit.geteway.validation.Validator;
 import shareit.geteway.webClient.BasicWebClient;
-import shareit.server.validation.Validator;
 
 import java.util.Map;
 
@@ -23,7 +23,9 @@ public class BookingClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> addNewBooking(Long userId, ClientRequestBookingDto dto) {
-        return post("", dto, userId);
+        Validator.validationTimeFromDto(dto);
+
+        return post(dto, userId);
     }
 
     public ResponseEntity<?> ownerResponseToTheBooking(Long userId, Boolean approved, Long bookingId) {
@@ -35,6 +37,8 @@ public class BookingClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> findAllBookingsForBooker(Long userId, String state, Integer from, Integer size) {
+        Validator.validationTypeBooking(state);
+
         Map<String, Object> param = Map.of(
                 "state", state,
                 "from", from,
@@ -45,6 +49,8 @@ public class BookingClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> findAllBookingsForOwner(Long userId, String state, Integer from, Integer size) {
+        Validator.validationTypeBooking(state);
+
         Map<String, Object> param = Map.of(
                 "state", state,
                 "from", from,
