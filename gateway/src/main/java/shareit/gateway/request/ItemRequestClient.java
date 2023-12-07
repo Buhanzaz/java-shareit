@@ -16,7 +16,7 @@ public class ItemRequestClient extends BasicWebClient {
 
     private static final String API_REQUEST_LOCATION = "/requests";
 
-    public ItemRequestClient(@Value("${api.shareIt.server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public ItemRequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_REQUEST_LOCATION))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }

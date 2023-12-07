@@ -16,7 +16,7 @@ import java.util.Map;
 public class ItemClient extends BasicWebClient {
     private static final String API_ITEM_LOCATION = "/items";
 
-    public ItemClient(@Value("${api.shareIt.server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_ITEM_LOCATION))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }

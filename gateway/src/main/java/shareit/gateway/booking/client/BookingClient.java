@@ -17,7 +17,7 @@ public class BookingClient extends BasicWebClient {
 
     private static final String API_BOOKING_LOCATION = "/bookings";
 
-    public BookingClient(@Value("${api.shareIt.server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public BookingClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_BOOKING_LOCATION))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }

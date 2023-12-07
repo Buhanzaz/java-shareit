@@ -13,7 +13,7 @@ import shareit.gateway.webClient.BasicWebClient;
 public class UserClient extends BasicWebClient {
     private static final String API_USER_LOCATION = "/users";
 
-    public UserClient(@Value("${api.shareIt.server.url}") String serverUrl, RestTemplateBuilder restTemplateBuilder) {
+    public UserClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder restTemplateBuilder) {
         super(restTemplateBuilder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_USER_LOCATION))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new).build());
     }
