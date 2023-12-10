@@ -1,34 +1,32 @@
 package shareit.gateway.item.dto;
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.apache.catalina.User;
-import org.hibernate.validator.constraints.Length;
-import shareit.gateway.booking.dto.BookingWithoutItemDto;
-import shareit.gateway.validation.CreateValidationObject;
+import shareit.gateway.validation.interfaces.CreateValidationObject;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
-@Data
-@Builder
+@Setter
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     Long id; //Id вещи.
 
     @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
-    @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
+    @Size(max = 255, groups = {CreateValidationObject.class}, message = "Вы привыслили лимит в 255 символов")
     String name; //Название вещи.
 
     @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
-    @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
-    @Length(max = 1000, groups = {CreateValidationObject.class}, message = "Вы привыслили лимит в 1000 символов")
+    @Size(max = 255, groups = {CreateValidationObject.class}, message = "Вы привыслили лимит в 255 символов")
     String description; //Описание.
 
     @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")

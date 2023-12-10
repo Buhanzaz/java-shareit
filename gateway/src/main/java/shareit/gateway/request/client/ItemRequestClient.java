@@ -1,4 +1,4 @@
-package shareit.gateway.request;
+package shareit.gateway.request.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

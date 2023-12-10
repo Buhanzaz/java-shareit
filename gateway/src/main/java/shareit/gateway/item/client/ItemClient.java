@@ -10,6 +10,7 @@ import shareit.gateway.item.dto.CommentDto;
 import shareit.gateway.item.dto.ItemDto;
 import shareit.gateway.webClient.BasicWebClient;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Component
@@ -38,6 +39,10 @@ public class ItemClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> itemSearch(String itemName, Long userId, Integer from, Integer size) {
+        if (itemName.isBlank()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
         Map<String, Object> paramFrom = Map.of(
                 "text", itemName,
                 "from", from,

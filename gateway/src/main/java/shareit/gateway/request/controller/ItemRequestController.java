@@ -1,30 +1,30 @@
-package shareit.gateway.request;
+package shareit.gateway.request.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import shareit.gateway.request.client.ItemRequestClient;
 import shareit.gateway.request.dto.ItemRequestDto;
-import shareit.gateway.validation.CreateValidationObject;
+import shareit.gateway.validation.interfaces.CreateValidationObject;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-item-requests.
- */
+import static shareit.gateway.constant.Constants.HEADER_ID_USER;
+
+
 @Validated
-@RestController
+@Controller
 @RequestMapping(path = "/requests")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ItemRequestController {
+    private final ItemRequestClient webClient;
 
-    ItemRequestClient webClient;
-    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
+    private static final String URI_SEARCH_ALL = "/all";
+    private static final String URI_SEARCH_ITEMS_REQUESTS = "/{requestId}";
 
     @PostMapping
     public ResponseEntity<?> addItemRequest(
@@ -43,7 +43,7 @@ public class ItemRequestController {
         return webClient.findAllItemsRequestsCreator(creatorId, from, size);
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(URI_SEARCH_ALL)
     public ResponseEntity<?> searchAllItemsRequests(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
@@ -52,7 +52,7 @@ public class ItemRequestController {
         return webClient.searchAllItemsRequests(userId, from, size);
     }
 
-    @GetMapping(path = "/{requestId}")
+    @GetMapping(URI_SEARCH_ITEMS_REQUESTS)
     public ResponseEntity<?> searchAllItemsRequestsByI(
             @RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
             @PathVariable @Min(1) Long requestId) {

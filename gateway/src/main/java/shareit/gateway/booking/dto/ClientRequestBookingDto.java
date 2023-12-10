@@ -2,6 +2,7 @@ package shareit.gateway.booking.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import shareit.gateway.validation.annotation.StartBeforeEndDateValid;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
@@ -10,9 +11,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
-@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@StartBeforeEndDateValid
 public class ClientRequestBookingDto {
     @NotNull(message = "Поле itemId не может быть пустым")
     Long itemId;

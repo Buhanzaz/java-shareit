@@ -23,8 +23,6 @@ public class BookingClient extends BasicWebClient {
     }
 
     public ResponseEntity<?> addNewBooking(Long userId, ClientRequestBookingDto dto) {
-        Validator.validationTimeFromDto(dto);
-
         return post(dto, userId);
     }
 

@@ -1,29 +1,26 @@
 package shareit.gateway.request.dto;
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import shareit.gateway.item.dto.ItemDto;
 import shareit.gateway.user.dto.UserDto;
-import shareit.gateway.validation.CreateValidationObject;
+import shareit.gateway.validation.interfaces.CreateValidationObject;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * TODO Sprint add-item-requests.
- */
-@Data
-@Builder
+@Setter
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
     Long id;
     UserDto creator;
-    @NotNull(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
     @NotBlank(groups = {CreateValidationObject.class}, message = "Поле не может быть пустым")
+    @Size(max = 255, groups = {CreateValidationObject.class}, message = "Вы привыслили лимит в 255 символов")
     String description;
     LocalDateTime created;
     List<ItemDto> items;

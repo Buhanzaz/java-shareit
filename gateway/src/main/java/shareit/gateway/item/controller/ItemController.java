@@ -1,35 +1,31 @@
 package shareit.gateway.item.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shareit.gateway.item.client.ItemClient;
 import shareit.gateway.item.dto.CommentDto;
 import shareit.gateway.item.dto.ItemDto;
-import shareit.gateway.validation.CreateValidationObject;
-import shareit.gateway.validation.UpdateValidationObject;
+import shareit.gateway.validation.interfaces.CreateValidationObject;
+import shareit.gateway.validation.interfaces.UpdateValidationObject;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 
-/**
- * TODO Sprint add-controllers.
- */
+import static shareit.gateway.constant.Constants.HEADER_ID_USER;
+
 @Validated
-@RestController
+@Controller
 @RequestMapping("/items")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemController {
-    ItemClient webClient;
-    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
+    private final ItemClient webClient;
     private static final String URI_ID_ITEM = "/{itemId}";
     private static final String URI_SEARCH = "/search";
-    private static final String URI_ADD_COMMENT = URI_ID_ITEM + "/comment";
+    private static final String URI_ADD_COMMENT = "/{itemId}/comment";
 
 
     @PostMapping
@@ -68,7 +64,7 @@ public class ItemController {
     @PostMapping(URI_ADD_COMMENT)
     public ResponseEntity<?> postRequestAddComment(@RequestHeader(HEADER_ID_USER) @Min(1) Long userId,
                                                    @PathVariable @Min(1) Long itemId,
-                                                   @RequestBody @Validated CommentDto dto) {
+                                                   @RequestBody @Validated(CreateValidationObject.class) CommentDto dto) {
 
         return webClient.addComment(userId, itemId, dto);
     }

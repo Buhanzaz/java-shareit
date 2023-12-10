@@ -1,31 +1,26 @@
 package shareit.gateway.user.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shareit.gateway.user.client.UserClient;
 import shareit.gateway.user.dto.UserDto;
-import shareit.gateway.validation.CreateValidationObject;
-import shareit.gateway.validation.UpdateValidationObject;
+import shareit.gateway.validation.interfaces.CreateValidationObject;
+import shareit.gateway.validation.interfaces.UpdateValidationObject;
 
 import javax.validation.constraints.Min;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
 @Validated
-@RestController
+@Controller
 @RequestMapping(path = "/users")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserController {
 
-    UserClient webClient;
+    private final UserClient webClient;
     private static final String URI_ID_USER = "/{userId}";
 
     @PostMapping
@@ -50,6 +45,7 @@ public class UserController {
         return webClient.getUserById(userId);
     }
 
+    @ResponseBody
     @DeleteMapping(path = URI_ID_USER)
     public void deleteUser(@PathVariable @Min(1) Long userId) {
         webClient.deleteUser(userId);

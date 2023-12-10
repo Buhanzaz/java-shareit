@@ -1,6 +1,8 @@
-package shareit.gateway.booking.dto;
+package shareit.gateway.item.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -8,8 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-@AllArgsConstructor
 public class BookingWithoutItemDto {
     Long id;
     Long bookerId;
