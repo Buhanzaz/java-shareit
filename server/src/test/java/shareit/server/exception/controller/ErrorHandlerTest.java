@@ -26,28 +26,28 @@ class ErrorHandlerTest {
 
     @Test
     void handleForBadRequest() {
-        ErrorHandler.ErrorResponse errorResponse = errorHandler.handleForBadRequest(new ValidateException("Test"));
+        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerBadRequest(new ValidateException("Test"));
 
         assertEquals("Test", errorResponse.getError());
     }
 
     @Test
     void handlerForDataException() {
-        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerForDataException(new DataTimeException("Test"));
+        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerBadRequest(new DataTimeException("Test"));
 
         assertEquals("Test", errorResponse.getError());
     }
 
     @Test
     void handlerForBookingException() {
-        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerForBookingException(new BookingException("Test"));
+        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerBadRequest(new BookingException("Test"));
 
         assertEquals("Test", errorResponse.getError());
     }
 
     @Test
     void handlerForEnumException() {
-        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerForEnumException(new EnumException("Test"));
+        ErrorHandler.ErrorResponse errorResponse = errorHandler.handlerBadRequest(new EnumException("Test"));
 
         assertEquals("Test", errorResponse.getError());
     }

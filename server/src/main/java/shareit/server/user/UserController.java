@@ -1,27 +1,21 @@
 package shareit.server.user;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.user.dto.UserDto;
 import shareit.server.user.service.UserService;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
-@RestController
+@Controller
 @RequestMapping(path = "/users")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserController {
-
-    UserService userService;
+    private final UserService userService;
 
     private static final String URI_ID_USER = "/{userId}";
 

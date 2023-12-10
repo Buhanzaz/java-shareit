@@ -1,9 +1,8 @@
 package shareit.server.item;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.item.dto.CommentDto;
 import shareit.server.item.dto.ItemDto;
@@ -11,20 +10,16 @@ import shareit.server.item.service.ItemService;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
+import static shareit.server.constant.Constants.HEADER_ID_USER;
 
-@RestController
+@Controller
 @RequestMapping("/items")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemController {
-    ItemService itemService;
-    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
+    private final ItemService itemService;
     private static final String URI_ID_ITEM = "/{itemId}";
     private static final String URI_SEARCH = "/search";
-    private static final String URI_ADD_COMMENT = URI_ID_ITEM + "/comment";
+    private static final String URI_ADD_COMMENT = "/{itemId}/comment";
 
 
     @PostMapping

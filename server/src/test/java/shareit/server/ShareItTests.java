@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ShareItTests {
 
 	@Autowired
-	ShareItApp shareItApp;
+	ShareItServer shareItServer;
 
 	@Test
 	void contextLoads() {
@@ -16,6 +16,6 @@ class ShareItTests {
 
 	@Test
 	void shareItAppTest() {
-		ShareItApp.main(new String[] {});
+		ShareItServer.main(new String[] {});
 	}
 }

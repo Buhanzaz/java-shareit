@@ -1,9 +1,8 @@
 package shareit.server.booking;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.booking.dto.BookingDto;
 import shareit.server.booking.dto.ClientRequestBookingDto;
@@ -11,16 +10,15 @@ import shareit.server.booking.service.BookingService;
 
 import java.util.List;
 
-@RestController
+import static shareit.server.constant.Constants.HEADER_ID_USER;
+
+@Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingController {
-
-    BookingService bookingService;
+    private final BookingService bookingService;
     private static final String URI_PATH_BOOKING_ID = "/{bookingId}";
     private static final String URI_PATH_BOOKINGS_FOR_OWNER = "/owner";
-    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
 
     @PostMapping
     public ResponseEntity<BookingDto> addNewBooking(@RequestHeader(HEADER_ID_USER) Long userId,

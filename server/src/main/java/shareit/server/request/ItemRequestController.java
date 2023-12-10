@@ -1,24 +1,23 @@
 package shareit.server.request;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shareit.server.request.dto.ItemRequestDto;
 import shareit.server.request.service.ItemRequestService;
 
 import java.util.List;
 
-@RestController
+import static shareit.server.constant.Constants.HEADER_ID_USER;
+
+@Controller
 @RequestMapping(path = "/requests")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ItemRequestController {
-
-    ItemRequestService itemRequestService;
-    private static final String HEADER_ID_USER = "X-Sharer-User-Id";
-
+    private final ItemRequestService itemRequestService;
+    private static final String URI_SEARCH_ALL = "/all";
+    private static final String URI_SEARCH_ITEMS_REQUESTS = "/{requestId}";
 
     @PostMapping
     public ResponseEntity<ItemRequestDto> postRequestAddItemRequest(
@@ -37,7 +36,7 @@ public class ItemRequestController {
         return ResponseEntity.ok(itemRequestService.searchAllItemsRequestsCreator(creatorId, from, size));
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(URI_SEARCH_ALL)
     public ResponseEntity<List<ItemRequestDto>> getMappingSearchAllItemsRequests(
             @RequestHeader(HEADER_ID_USER) Long userId,
             @RequestParam(defaultValue = "0") Integer from,
@@ -46,7 +45,7 @@ public class ItemRequestController {
         return ResponseEntity.ok(itemRequestService.searchAllItemsRequests(userId, from, size));
     }
 
-    @GetMapping(path = "/{requestId}")
+    @GetMapping(URI_SEARCH_ITEMS_REQUESTS)
     public ResponseEntity<ItemRequestDto> getMappingSearchItemsRequestsById(
             @RequestHeader(HEADER_ID_USER) Long userId,
             @PathVariable Long requestId) {
